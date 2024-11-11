@@ -1,0 +1,13 @@
+class ChangeRiskStatusMonitorToActive < ActiveRecord::Migration[4.2]
+
+  def change
+    risk_status = RiskStatus.find_by_name 'Monitored'
+    if risk_status
+  #    risk_status.update_attributes(name: 'Active')
+      risk_status.update(is_default: true)
+    else
+      RiskStatus.create(name: 'Active', color: '15773006')
+    end
+  end
+
+end

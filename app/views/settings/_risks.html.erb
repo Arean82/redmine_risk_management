@@ -1,0 +1,13 @@
+<% html_title l(:label_settings), l(:label_risk_plural) -%>
+
+<%
+  tabs = [
+    {
+      name: 'status',
+      partial: 'settings/risks/status',
+      label: :label_risks_status_plural
+    }
+  ]
+%>
+
+<%= render_tabs tabs %>
