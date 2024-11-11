@@ -1,8 +1,10 @@
 # Redmine Risk Management
 
-V0.0.4 (5-Jun-2018)
+V0.0.5 (11-Nov-2024)
 
-Risk management is a plugin for [Redmine](http://www.redmine.org/) (a project management web application), allowing to manage the risks for a given project.
+Risk management is a plugin for [Redmine](http://www.redmine.org/) (a project management web application), allows to manage the risks for a given project.
+
+This is a fork of [redmine_risk_management](https://github.com/imaginary-cloud/redmine_risk_management) 
 
 ## Installation
 
@@ -14,14 +16,14 @@ Risk management is a plugin for [Redmine](http://www.redmine.org/) (a project ma
 
 ## How to use
 
-First you can create custom status going to the plugin administration page.
+First, you can create a custom status by going to the plugin administration page.
 
-![redmine_rm_risks screenshot](https://raw.githubusercontent.com/imaginary-cloud/redmine_risk_management/master/Screenshot_risks.png)
+![redmine_rm_risks screenshot](https://github.com/Arean82/redmine_risk_management/blob/master/Screenshot_risks.png)
 
-To create a risk for a project you need to click in Risks tab under the project detail page. 
+To create a risk for a project you need to click on the Risks tab under the project detail page. 
 
 
-![redmine_rm_status screenshot](https://raw.githubusercontent.com/imaginary-cloud/redmine_risk_management/master/Screenshot_status.png)
+![redmine_rm_status screenshot](https://github.com/Arean82/redmine_risk_management/blob/master/Screenshot_status.png)
 
 ## Keywords
 
@@ -31,18 +33,14 @@ Risk Management, Risk, Impact, Management, Redmine, Plugin
 
 Support will only be given to the following versions or above:
 
-* Redmine version                2.6.10
-* Ruby version                   2.2.0
-* Rails version                  3.2.22
+* Redmine version                5.1.x
+* Ruby version                   3.1.2p20
+* Rails version                  6.1.7.8
 
-Note: Redmine 2.6.5 does not support Ruby 2.2. Redmine 2.6.6 supports it (#19652). [Link](http://www.redmine.org/projects/redmine/wiki/RedmineInstall/252#Requirements)
+Note: I have tested this on Redmine v5.1.3
 
 ## License
 
-Copyright © 2010-2018 [Imaginary Cloud](https://www.imaginarycloud.com). This library is licensed under the MIT license.
+Copyright © 2010-2018. This library is licensed under the MIT license.
 
-## About Imaginary Cloud
 
-![Imaginary Cloud](https://s3.eu-central-1.amazonaws.com/imaginary-images/Logo_IC_readme.svg)
-
-We apply our own Product Design Process to bring great digital products to life. Visit [our website](https://www.imaginarycloud.com) to find out about our other projects or [contact us](https://www.imaginarycloud.com/contacts) if there's an idea that you want to turn into an outstanding product, we'll take it from there!
