@@ -1,12 +1,13 @@
-require 'redmine_risk_management'
+#require 'redmine_risk_management'
+require 'redmine'
 
 Redmine::Plugin.register :redmine_risk_management do
   name 'Redmine Risk Management plugin'
-  author 'Imaginary Cloud (http://imaginarycloud.com)'
+  author 'Arean Narrayan'
   description 'Risk management plugin for Redmine'
-  version '0.4'
-  url 'https://github.com/imaginary-cloud/redmine_risk_management'
-  author_url 'mailto:info@imaginarycloud.com'
+  version '0.5'
+  url 'https://github.com/Arean82/redmine_risk_management/'
+  
 
   settings default: {
     status: ['Identified', 'Monitored', 'Occurred', 'Dismissed']
