@@ -3,10 +3,11 @@ require 'redmine'
 
 Redmine::Plugin.register :redmine_risk_management do
   name 'Redmine Risk Management plugin'
-  author 'Arean Narrayan (https://github.com/Arean82)'
+  author 'Arean Narrayan'
   description 'Risk management plugin for Redmine'
   version '0.5'
   url 'https://github.com/Arean82/redmine_risk_management/'
+  author_url 'https://github.com/Arean82'
   
 
   settings default: {
