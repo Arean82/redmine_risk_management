@@ -31,7 +31,8 @@ class RiskStatusesController < ApplicationController
   def update
     @risk_status = RiskStatus.find(params[:id])
 
-    if @risk_status.update_attributes(risk_status_params)
+   # if @risk_status.update_attributes(risk_status_params)
+    if @risk_status.update(risk_status_params)
       flash[:notice] = t(:notice_successful_update)
       redirect_to plugin_settings_path(:redmine_risk_management)
     else
