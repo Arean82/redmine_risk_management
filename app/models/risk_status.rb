@@ -1,5 +1,5 @@
 class RiskStatus < ActiveRecord::Base
-  unloadable
+  # unloadable
 
   include Redmine::SafeAttributes
 
