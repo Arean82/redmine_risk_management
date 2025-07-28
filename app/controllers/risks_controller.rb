@@ -1,5 +1,5 @@
 class RisksController < ApplicationController
-  unloadable
+  # unloadable
 
   before_action :find_project_by_project_id
   before_action :find_risk, except: [:index, :new, :create]
