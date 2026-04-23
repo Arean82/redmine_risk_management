@@ -43,8 +43,8 @@ class RisksController < ApplicationController
   end
 
   def show
-      @issues = @risk.issues
-      @available_issues = @project.issues.where(risk_id: nil).limit(10)
+    @issues = @risk.issues
+    @available_issues = @project.issues.where(risk_id: nil).limit(10)
   end
 
   def edit
@@ -57,7 +57,7 @@ class RisksController < ApplicationController
     if @risk.save
       flash[:notice] = t(:notice_successful_update)
       respond_to do |format|
-        format.html { redirect_to [@project, @risk]  }
+        format.html { redirect_to [@project, @risk] }
         format.api  { head :ok }
       end
     else
@@ -94,6 +94,8 @@ class RisksController < ApplicationController
   end
 
   def add_existing_issue
+    deny_access unless User.current.allowed_to?(:edit_issues, @project)
+    
     issue = @project.issues.find(params[:issue_id])
     issue.risk_id = @risk.id
 
@@ -104,9 +106,14 @@ class RisksController < ApplicationController
     end
 
     redirect_to project_risk_path(@project, @risk)
+  rescue ActiveRecord::RecordNotFound
+    flash[:error] = "Issue not found in this project."
+    redirect_to project_risk_path(@project, @risk)
   end
 
   def remove_issue
+    deny_access unless User.current.allowed_to?(:edit_issues, @project)
+    
     issue = @project.issues.find(params[:issue_id])
     issue.risk_id = nil
     
@@ -116,6 +123,9 @@ class RisksController < ApplicationController
       flash[:error] = "Failed to remove issue: #{issue.errors.full_messages.join(', ')}"
     end
     
+    redirect_to project_risk_path(@project, @risk)
+  rescue ActiveRecord::RecordNotFound
+    flash[:error] = "Issue not found in this project."
     redirect_to project_risk_path(@project, @risk)
   end
 
