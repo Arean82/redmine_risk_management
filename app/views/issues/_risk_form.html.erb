@@ -1,7 +1,6 @@
 <%= labelled_fields_for(@issue) do |f| %>
   <p>
-    <%= f.hidden_field :risk_id %>
     <%= f.label :risk_id, t('label_risk') %>
-    <%= text_field_tag :risk_id_disabled, @issue.risk_id, size: 10, disabled: :disabled %>
+    <%= f.select :risk_id, @project.risks.map { |r| ["#{r.title} (##{r.id})", r.id] }, include_blank: true %>
   </p>
 <% end %>

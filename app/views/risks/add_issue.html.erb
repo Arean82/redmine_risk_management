@@ -1,0 +1,53 @@
+<h2>Add Existing Issue to Risk: <%= @risk.title %></h2>
+
+<div class="box">
+  <p>Search for an issue to add to this risk:</p>
+  
+  <input type="text" id="issue_search" placeholder="Search by subject or ID..." style="width: 100%; padding: 8px;" />
+  
+  <div id="search_results" style="margin-top: 20px;"></div>
+</div>
+
+<%= link_to "Back to Risk", project_risk_path(@project, @risk), class: "icon icon-cancel" %>
+
+<script>
+  $(function() {
+    var searchTimeout;
+    
+    $('#issue_search').on('input', function() {
+      clearTimeout(searchTimeout);
+      var query = $(this).val();
+      
+      searchTimeout = setTimeout(function() {
+        if (query.length >= 2) {
+          $.ajax({
+            url: '<%= add_issue_project_risk_path(@project, @risk) %>',
+            data: { q: query, format: 'json' },
+            dataType: 'json',
+            success: function(data) {
+              var html = '<ul class="issues">';
+              $.each(data, function(i, issue) {
+                html += '<li style="padding: 8px; border-bottom: 1px solid #eee;">';
+                html += '<strong>' + issue.text + '</strong>';
+                html += '<form method="post" action="<%= add_existing_issue_project_risk_path(@project, @risk) %>" style="display: inline; margin-left: 10px;">';
+                html += '<input type="hidden" name="issue_id" value="' + issue.id + '" />';
+                html += '<input type="submit" value="Add to Risk" class="button-small" />';
+                html += '</form>';
+                html += '</li>';
+              });
+              html += '</ul>';
+              
+              if (data.length === 0) {
+                html = '<p class="nodata">No issues found. Try a different search term.</p>';
+              }
+              
+              $('#search_results').html(html);
+            }
+          });
+        } else {
+          $('#search_results').html('<p>Enter at least 2 characters to search...</p>');
+        }
+      }, 300);
+    });
+  });
+</script>

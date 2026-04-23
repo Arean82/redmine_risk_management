@@ -47,23 +47,19 @@
   <hr />
   <div id='risk_issues'>
     <div class='contextual'>
-      <%= link_to "New Issue", new_project_issue_path(@project, 'issue[risk_id]' => @risk), class: 'icon icon-add' %>
-      <%= link_to "Add Existing Issue", add_issue_project_risk_path(@project, @risk), class: 'icon icon-search' %>
+      <%= link_to t(:button_add), new_project_issue_path(@project, 'issue[risk_id]' => @risk) %>
     </div>
     <p><strong><%= t(:label_risks_issues)%></strong></p>
-  
+
     <% if @issues.present? %>
     <ul>
       <% @issues.each do |issue| %>
       <li>
         <%= link_to "#{h issue.tracker.name} ##{issue.id}", issue %>:
         <%= issue.subject %>
-        <%= link_to "Remove", remove_issue_project_risk_path(@project, @risk, issue_id: issue.id), method: :delete, class: "icon icon-del", confirm: "Are you sure?" %>
       </li>
       <% end -%>
     </ul>
-    <% else %>
-      <p class="nodata">No issues linked to this risk yet.</p>
     <% end -%>
   </div>
 </div>

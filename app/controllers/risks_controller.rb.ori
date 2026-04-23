@@ -43,8 +43,7 @@ class RisksController < ApplicationController
   end
 
   def show
-      @issues = @risk.issues
-      @available_issues = @project.issues.where(risk_id: nil).limit(10)
+    @issues = @risk.issues
   end
 
   def edit
@@ -82,42 +81,6 @@ class RisksController < ApplicationController
     end
   end
 
-  def add_issue
-    @issues = @project.issues.where(risk_id: nil)
-    @issues = @issues.where("subject LIKE ? OR id = ?", "%#{params[:q]}%", params[:q]) if params[:q].present?
-    @issues = @issues.limit(50)
-
-    respond_to do |format|
-      format.html
-      format.json { render json: @issues.map { |i| { id: i.id, text: "##{i.id}: #{i.subject}" } } }
-    end
-  end
-
-  def add_existing_issue
-    issue = @project.issues.find(params[:issue_id])
-    issue.risk_id = @risk.id
-
-    if issue.save
-      flash[:notice] = "Issue ##{issue.id} has been added to this risk."
-    else
-      flash[:error] = "Failed to add issue: #{issue.errors.full_messages.join(', ')}"
-    end
-
-    redirect_to project_risk_path(@project, @risk)
-  end
-
-  def remove_issue
-    issue = @project.issues.find(params[:issue_id])
-    issue.risk_id = nil
-    
-    if issue.save
-      flash[:notice] = "Issue ##{issue.id} has been removed from this risk."
-    else
-      flash[:error] = "Failed to remove issue: #{issue.errors.full_messages.join(', ')}"
-    end
-    
-    redirect_to project_risk_path(@project, @risk)
-  end
 
 private
 
