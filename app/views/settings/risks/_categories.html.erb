@@ -1,7 +1,7 @@
 <%= stylesheet_link_tag 'risks', plugin: 'redmine_risk_management' rescue nil %>
 
 <div class='contextual'>
-  <%= link_to l(:label_risk_category_new), new_project_risk_category_path(project_id: (Project.first&.id || 1)), class: 'icon icon-add' %>
+  <%= link_to l(:label_risk_category_new), Rails.application.routes.url_helpers.new_risk_category_path, class: 'icon icon-add' %>
 </div>
 
 <h3><%= l(:label_risk_category_plural) %></h3>
@@ -22,12 +22,12 @@
       <% categories.each do |category| %>
         <tr class="<%= cycle('odd', 'even') %>">
           <td class='name'>
-            <%= link_to category.name, edit_project_risk_category_path(category.project || Project.first, category) %>
+            <%= link_to category.name, Rails.application.routes.url_helpers.edit_risk_category_path(category) %>
           </td>
           <td><%= category.project ? link_to_project(category.project) : l(:label_all_words) %></td>
           <td class='buttons'>
-            <%= link_to l(:button_edit), edit_project_risk_category_path(category.project || Project.first, category), class: 'icon-only icon-edit' %>
-            <%= link_to l(:button_delete), project_risk_category_path(category.project || Project.first, category), method: :delete, data: { confirm: l(:text_are_you_sure) }, class: 'icon-only icon-del' %>
+            <%= link_to l(:button_edit), Rails.application.routes.url_helpers.edit_risk_category_path(category), class: 'icon-only icon-edit' %>
+            <%= link_to l(:button_delete), Rails.application.routes.url_helpers.risk_category_path(category), method: :delete, data: { confirm: l(:text_are_you_sure) }, class: 'icon-only icon-del' %>
           </td>
         </tr>
       <% end %>

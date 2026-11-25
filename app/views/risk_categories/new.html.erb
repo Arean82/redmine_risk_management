@@ -1,6 +1,6 @@
 <h2><%= l(:label_risk_category_new) rescue 'New Risk Category' %></h2>
 
-<%= labelled_form_for @category, url: project_risk_categories_path(@project) do |f| %>
+<%= labelled_form_for @category, url: (@project ? project_risk_categories_path(@project) : risk_categories_path) do |f| %>
   <%= render partial: 'form', locals: { f: f } %>
   <p><%= submit_tag l(:button_create) %></p>
 <% end %>

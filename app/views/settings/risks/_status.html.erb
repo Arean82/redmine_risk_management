@@ -1,7 +1,7 @@
 <%= stylesheet_link_tag 'risks', plugin: 'redmine_risk_management' %>
 
 <div class='contextual'>
-<%= link_to t(:label_new), new_risk_status_path, :class => 'icon icon-add' %>
+<%= link_to t(:label_new), Rails.application.routes.url_helpers.new_risk_status_path, :class => 'icon icon-add' %>
 </div>
 
 <h3><%= t(:label_risks_status_plural)%></h3>
@@ -21,12 +21,12 @@
     <tr class="<%= cycle("odd", "even") %>">
       <td class='name'>
         <span class='color' style="background-color: <%= risk_status.color_name %>;"></span>
-        <%= link_to risk_status.name, edit_risk_status_path(risk_status) %>
+        <%= link_to risk_status.name, Rails.application.routes.url_helpers.edit_risk_status_path(risk_status) %>
       </td>
       <td align='center' style='width:15%;'><%= checked_image risk_status.is_default? %></td>
       <td align='center' style='width:15%;'><%= risk_status.status_type %></td>
       <td class='buttons'>
-        <%= delete_link risk_status_path(risk_status) %>
+        <%= link_to l(:button_delete), Rails.application.routes.url_helpers.risk_status_path(risk_status), method: :delete, data: { confirm: l(:text_are_you_sure) }, class: 'icon-only icon-del' %>
       </td>
     </tr>
   <% end %>
