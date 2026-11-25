@@ -1,7 +1,10 @@
-<%= labelled_fields_for(@issue) do |f| %>
+<% if @project.module_enabled?(:risks) && User.current.allowed_to?(:edit_risks, @project) %>
   <p>
-    <%= f.hidden_field :risk_id %>
-    <%= f.label :risk_id, t('label_risk') %>
-    <%= text_field_tag :risk_id_disabled, @issue.risk_id, size: 10, disabled: :disabled %>
+    <label><%= l(:label_risk_plural) %></label>
+    <%= select_tag 'issue[risk_ids][]',
+          options_from_collection_for_select(@project.risks.open_risks, :id, :title, @issue.risk_ids),
+          multiple: true,
+          style: 'width: 95%; max-width: 600px;',
+          include_blank: true %>
   </p>
 <% end %>

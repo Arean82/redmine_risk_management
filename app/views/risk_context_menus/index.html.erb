@@ -1,0 +1,58 @@
+<ul>
+  <% if @risk %>
+    <li><%= context_menu_link l(:button_edit), edit_risk_path(@risk), class: 'icon icon-edit', disabled: !@can[:edit] %></li>
+  <% else %>
+    <li><%= context_menu_link l(:button_edit), bulk_edit_risks_path(ids: @risks.collect(&:id)), class: 'icon icon-edit', disabled: !@can[:edit] %></li>
+  <% end %>
+
+  <% if @statuses.present? && @can[:edit] %>
+    <li class="folder">
+      <a href="#" class="submenu"><%= l(:field_status) %></a>
+      <ul>
+        <% @statuses.each do |s| %>
+          <li>
+            <%= context_menu_link s.name,
+                  bulk_update_risks_path(ids: @risks.collect(&:id), risk: { risk_status_id: s.id }, back_url: @back),
+                  method: :post,
+                  selected: (@risk && @risk.risk_status_id == s.id),
+                  disabled: !@can[:edit] %>
+          </li>
+        <% end %>
+      </ul>
+    </li>
+  <% end %>
+
+  <% if @categories.present? && @can[:edit] %>
+    <li class="folder">
+      <a href="#" class="submenu"><%= l(:field_category) %></a>
+      <ul>
+        <li>
+          <%= context_menu_link l(:label_none),
+                bulk_update_risks_path(ids: @risks.collect(&:id), risk: { category_id: 'none' }, back_url: @back),
+                method: :post,
+                selected: (@risk && @risk.category_id.nil?),
+                disabled: !@can[:edit] %>
+        </li>
+        <% @categories.each do |c| %>
+          <li>
+            <%= context_menu_link c.name,
+                  bulk_update_risks_path(ids: @risks.collect(&:id), risk: { category_id: c.id }, back_url: @back),
+                  method: :post,
+                  selected: (@risk && @risk.category_id == c.id),
+                  disabled: !@can[:edit] %>
+          </li>
+        <% end %>
+      </ul>
+    </li>
+  <% end %>
+
+  <% if @can[:delete] %>
+    <li>
+      <%= context_menu_link l(:button_delete),
+            bulk_destroy_risks_path(ids: @risks.collect(&:id)),
+            method: :delete,
+            data: { confirm: l(:text_are_you_sure) },
+            class: 'icon icon-del' %>
+    </li>
+  <% end %>
+</ul>

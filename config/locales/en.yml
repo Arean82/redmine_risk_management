@@ -7,15 +7,28 @@ en:
   field_probability: Probability
   field_rationale: Rationale
   field_risk_status: Risk status
-  field_status: Statuss
+  field_status: Status
   field_status_type: Status type
   field_title: Title
+  field_treatments: Treatments / Response Strategy
+  field_lessons: Lessons Learned
+  field_category: Risk Category
 
   label_risk: Risk
   label_risk_plural: Risks
+  label_new_risk: New risk
   label_risks_new: New risk
   label_risks_edit: Edit risk
   label_risks_issues: Issues
   label_risks_status: Status
   label_risks_status_plural: Statuses
   label_risks_status_type: Status types
+  label_risk_category: Risk category
+  label_risk_category_plural: Risk categories
+  label_risk_category_new: New risk category
+  label_bulk_edit_selected_risks: Bulk edit selected risks
+  permission_view_risks: View risks
+  permission_add_risks: Add risks
+  permission_edit_risks: Edit risks
+  permission_delete_risks: Delete risks
+  permission_manage_risk_categories: Manage risk categories

@@ -1,0 +1,44 @@
+<h2><%= l(:label_bulk_edit_selected_risks) rescue 'Bulk Edit Risks' %></h2>
+
+<div class="box">
+  <p><strong><%= l(:label_selected) rescue 'Selected risks' %>:</strong></p>
+  <ul>
+    <% @risks.each do |risk| %>
+      <li><%= link_to "##{risk.id} #{risk.title}", project_risk_path(risk.project, risk) %></li>
+    <% end %>
+  </ul>
+</div>
+
+<%= form_tag(bulk_update_risks_path, method: :post) do %>
+  <% @risks.each do |risk| %>
+    <%= hidden_field_tag 'ids[]', risk.id %>
+  <% end %>
+
+  <div class="box tabular">
+    <p>
+      <label><%= l(:field_status) %></label>
+      <%= select_tag 'risk[risk_status_id]', options_for_select([[l(:label_no_change_option), '']] + @statuses.map { |s| [s.name, s.id] }) %>
+    </p>
+
+    <% if @categories.any? %>
+      <p>
+        <label><%= l(:field_category) %></label>
+        <%= select_tag 'risk[category_id]', options_for_select([[l(:label_no_change_option), ''], [l(:label_none), 'none']] + @categories.map { |c| [c.name, c.id] }) %>
+      </p>
+    <% end %>
+
+    <% if @assignees.any? %>
+      <p>
+        <label><%= l(:field_assigned_to) %></label>
+        <%= select_tag 'risk[assigned_to_id]', options_for_select([[l(:label_no_change_option), ''], [l(:label_none), 'none']] + @assignees.map { |u| [u.name, u.id] }) %>
+      </p>
+    <% end %>
+
+    <p>
+      <label><%= l(:field_notes) %></label>
+      <%= text_area_tag 'notes', '', cols: 60, rows: 4, class: 'wiki-edit' %>
+    </p>
+  </div>
+
+  <p><%= submit_tag l(:button_submit) %></p>
+<% end %>

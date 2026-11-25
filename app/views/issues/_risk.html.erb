@@ -1,12 +1,23 @@
-<% if @issue.risk %>
-
-  <%= stylesheet_link_tag 'risks', plugin: 'redmine_risk_management' %>
-
-  <div class='box risk'>
-    <p>
-      <%= link_to "#{t(:label_risk)} ##{@issue.risk.id}:", [@project, @issue.risk] %>
-      <%= @issue.risk.title %>
-    </p>
+<% risks = @issue.risks.presence || [@issue.risk].compact %>
+<% if risks.any? %>
+  <%= stylesheet_link_tag 'risks', plugin: 'redmine_risk_management' rescue nil %>
+  <hr />
+  <div class="splitcontent">
+    <div class="splitcontentleft">
+      <div class="attribute">
+        <div class="label"><%= l(:label_risk_plural) %>:</div>
+        <div class="value">
+          <% risks.each do |r| %>
+            <div style="margin-bottom: 3px;">
+              <%= link_to "#{l(:label_risk)} ##{r.id}: #{r.title}", project_risk_path(r.project, r) %>
+              <span class="badge" style="background-color: #<%= r.risk_status.color_to_hex %>; color: #fff; padding: 1px 5px; border-radius: 3px; font-size: 0.85em;">
+                <%= r.risk_status.name %>
+              </span>
+              <small>(<%= r.rationale %> - <%= r.criticality %>)</small>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
   </div>
-
 <% end %>

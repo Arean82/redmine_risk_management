@@ -1,23 +1,48 @@
 <%= error_messages_for 'risk' %>
 
 <div class="box tabular">
-
-  <p><%= f.text_field :title, size: 100, maxlength: 255, required: true %></p>
-
   <p>
-    <%= f.label_for_field :description, required: true %>
-    <%= f.text_area :description, cols: 60, no_label: true,
-                    rows: (@risk.description.blank? ? 10 : [[10, @risk.description.length / 50].max, 100].min),
-                    class: 'wiki-edit' %>
-    <%= wikitoolbar_for 'risk_description' %>
+    <%= f.text_field :title, required: true, size: 80 %>
+  </p>
+  <p>
+    <%= f.text_area :description, required: true, cols: 60, rows: 6, class: 'wiki-edit' %>
   </p>
 
-  <p><%= f.select :probability, options_with_lower_and_highier, required: true %></p>
-  <p><%= f.select :impact, options_with_lower_and_highier, required: true %></p>
-  <p><%= f.select :risk_status_id,
-                  options_from_collection_for_select(@risk_statuses, :id, :name, @risk.risk_status_id || @risk_statuses.default.try(:id)),
-                  required: true %></p>
+  <div class="splitcontent">
+    <div class="splitcontentleft">
+      <p>
+        <%= f.select :risk_status_id, @risk_statuses.collect { |s| [s.name, s.id] }, required: true %>
+      </p>
+      <% if @categories.present? %>
+        <p>
+          <%= f.select :category_id, (@categories.collect { |c| [c.name, c.id] }), include_blank: true, label: :field_category %>
+        </p>
+      <% end %>
+      <p>
+        <%= f.select :assigned_to_id, principals_options_for_select(@risk.project.assignable_users, @risk.assigned_to), include_blank: true, label: :field_assigned_to %>
+      </p>
+    </div>
+    <div class="splitcontentright">
+      <p>
+        <%= f.select :probability, (1..4).collect { |p| [p, p] }, label: :field_probability %>
+      </p>
+      <p>
+        <%= f.select :impact, (1..4).collect { |i| [i, i] }, label: :field_impact %>
+      </p>
+    </div>
+  </div>
 
+  <p>
+    <%= f.text_area :treatments, cols: 60, rows: 4, label: :field_treatments, class: 'wiki-edit' %>
+  </p>
+  <p>
+    <%= f.text_area :lessons, cols: 60, rows: 4, label: :field_lessons, class: 'wiki-edit' %>
+  </p>
+
+  <% if @risk.persisted? %>
+    <p>
+      <label><%= l(:field_notes) %></label>
+      <%= text_area_tag 'risk[notes]', '', cols: 60, rows: 4, class: 'wiki-edit' %>
+    </p>
+  <% end %>
 </div>
-
-

@@ -1,15 +1,13 @@
 module RedmineRiskManagement
   module Patches
-
     module ProjectPatch
-      def self.included(base) # :nodoc:
+      def self.included(base)
         base.class_eval do
-         # unloadable # Send unloadable so it will not be unloaded in development
           has_many :risks, dependent: :destroy
+          has_many :risk_categories, dependent: :destroy
         end
       end
     end
-
   end
 end
 

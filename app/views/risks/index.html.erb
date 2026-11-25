@@ -1,61 +1,99 @@
-<%= stylesheet_link_tag 'risks', plugin: 'redmine_risk_management' %>
-
-<div class='contextual'>
-  <%= link_to t('label_risks_new'), new_project_risk_path(@project), class: 'icon icon-add' %>
+<div class="contextual">
+  <%= link_to l(:label_new_risk), new_project_risk_path(@project), class: 'icon icon-add' if User.current.allowed_to?(:add_risks, @project) %>
 </div>
 
-<h2><%= t('label_risk_plural') %></h2>
+<h2><%= l(:label_risk_plural) %></h2>
 
-<% if @risks.empty? %>
-  <p class="nodata"><%= l(:label_no_data) %></p>
-<% else %>
-  <div class='autoscroll'>
-    <table class='list risks'>
-      <thead>
-        <tr>
-          <th></th>
-          <% risk_table_columns.each do |column| %>
-            <th><%= column %></th>
-          <% end -%>
-          <th><%= t(:label_risks_issues) %></th>
-        </tr>
-      </thead>
+<%= form_tag(project_risks_path(@project), method: :get, id: 'query_form') do %>
+  <%= render partial: 'queries/query_form' %>
+<% end %>
 
-      <tbody>
-        <% @risks.each do |risk| %>
-          <tr class=<%= cycle('odd', 'even') %>>
-            <td style='background-color: <%= risk.risk_status.color_name %> !important; border-color: <%= risk.risk_status.color_name %> !important;'></td>
-            <% risk_table_columns.each do |column| %>
-              <td class=<%= column.downcase %>>
-                <% if risk_linkable_columns.include?(column) %>
-                  <%= link_to risk.send(column.downcase), [@project, risk] %>
-
-                  <% if column.downcase == 'title' %>
-                    <div class='tag-label-color' style='background-color: <%= risk.risk_status.color_name %>'>
-                      <span><%= risk.risk_status.name %></span>
-                    </div>
-                  <% end -%>
-                <% else %>
-                  <% if column.downcase == 'description' %>
-                    <%= truncate risk.send(column.downcase), length: 200, omission: ' (...)' %>
+<% if @query.valid? %>
+  <% if @risks.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <%= form_tag({}, id: 'risks-form') do %>
+      <%= hidden_field_tag 'back_url', url_for(params: request.query_parameters), id: nil %>
+      <div class="autoscroll">
+        <table class="list risks <%= @query.css_classes %>">
+          <thead>
+            <tr>
+              <th class="checkbox hide-when-print">
+                <%= check_box_tag 'check_all', '', false, class: 'toggle-selection', title: "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
+              </th>
+              <% @query.inline_columns.each do |column| %>
+                <%= column_header(@query, column) %>
+              <% end %>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @risks.each do |risk| %>
+              <tr id="risk-<%= risk.id %>" class="hascontextmenu <%= cycle('odd', 'even') %>">
+                <td class="checkbox hide-when-print">
+                  <%= check_box_tag 'ids[]', risk.id, false, id: nil %>
+                </td>
+                <% @query.inline_columns.each do |column| %>
+                  <% case column.name %>
+                  <% when :id %>
+                    <td class="id"><%= link_to risk.id, project_risk_path(risk.project, risk) %></td>
+                  <% when :title %>
+                    <td class="title"><%= link_to risk.title, project_risk_path(risk.project, risk) %></td>
+                  <% when :risk_status %>
+                    <td class="status">
+                      <span class="badge" style="background-color: #<%= risk.risk_status.color_to_hex %>; color: #fff; padding: 2px 6px; border-radius: 3px;">
+                        <%= risk.risk_status.name %>
+                      </span>
+                    </td>
+                  <% when :category %>
+                    <td class="category"><%= risk.category&.name || '-' %></td>
+                  <% when :probability %>
+                    <td class="probability"><%= risk.probability %></td>
+                  <% when :impact %>
+                    <td class="impact"><%= risk.impact %></td>
+                  <% when :criticality %>
+                    <td class="criticality"><strong><%= risk.criticality %></strong></td>
+                  <% when :rationale %>
+                    <td class="rationale">
+                      <% case risk.rationale %>
+                      <% when 'Monitor' %>
+                        <span style="color: #2e7d32; font-weight: bold;"><%= risk.rationale %></span>
+                      <% when 'Plan Mitigation' %>
+                        <span style="color: #ef6c00; font-weight: bold;"><%= risk.rationale %></span>
+                      <% when 'Mitigate' %>
+                        <span style="color: #c62828; font-weight: bold;"><%= risk.rationale %></span>
+                      <% else %>
+                        <%= risk.rationale %>
+                      <% end %>
+                    </td>
+                  <% when :assigned_to %>
+                    <td class="assigned_to"><%= link_to_user(risk.assigned_to) if risk.assigned_to %></td>
+                  <% when :user %>
+                    <td class="user"><%= link_to_user(risk.user) if risk.user %></td>
+                  <% when :created_at %>
+                    <td class="created_at"><%= format_time(risk.created_at) %></td>
+                  <% when :updated_at %>
+                    <td class="updated_at"><%= format_time(risk.updated_at) %></td>
                   <% else %>
-                    <%= risk.send(column.downcase) %>
-                  <% end -%>
-                <% end -%>
-              </td>
-            <% end -%>
+                    <td><%= column_content(column, risk) %></td>
+                  <% end %>
+                <% end %>
+                <td class="buttons">
+                  <%= link_to l(:button_edit), edit_project_risk_path(risk.project, risk), class: 'icon-only icon-edit' if User.current.allowed_to?(:edit_risks, risk.project) %>
+                  <%= link_to l(:button_delete), project_risk_path(risk.project, risk), method: :delete, data: { confirm: l(:text_are_you_sure) }, class: 'icon-only icon-del' if User.current.allowed_to?(:delete_risks, risk.project) %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <span class="pagination"><%= pagination_links_full @risk_pages, @risk_count %></span>
+    <% end %>
 
-            <td>
-            <% risk.issues.each do |issue| %>
-              <p><%= link_to "##{issue.id}", issue %></p>
-            <% end -%>
-            </td>
-          </tr>
-        <% end -%>
-      </tbody>
-    </table>
+    <%= context_menu risks_context_menu_path %>
+  <% end %>
+<% end %>
 
-    <p class='pagination'><%= pagination_links_full @risks_pages, @risks_count %></p>
-  </div>
-
+<% content_for :sidebar do %>
+  <%= render partial: 'sidebar' rescue nil %>
 <% end %>

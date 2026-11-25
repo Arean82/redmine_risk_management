@@ -1,17 +1,16 @@
 module RedmineRiskManagement
   module Patches
-
     module IssuePatch
-      def self.included(base) # :nodoc:
+      def self.included(base)
         base.class_eval do
-          # unloadable # Send unloadable so it will not be unloaded in development
-          belongs_to :risk
+          belongs_to :risk, optional: true
+          has_many :risk_issues, dependent: :destroy
+          has_many :risks, through: :risk_issues
 
-          safe_attributes 'risk_id'
+          safe_attributes 'risk_id', 'risk_ids'
         end
       end
     end
-
   end
 end
 
