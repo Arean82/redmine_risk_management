@@ -33,5 +33,7 @@ Rails.configuration.to_prepare do
   Issue.include(RedmineRiskManagement::Patches::IssuePatch) unless Issue.included_modules.include?(RedmineRiskManagement::Patches::IssuePatch)
   Project.include(RedmineRiskManagement::Patches::ProjectPatch) unless Project.included_modules.include?(RedmineRiskManagement::Patches::ProjectPatch)
   ProjectsHelper.prepend(RedmineRiskManagement::Patches::ProjectsHelperPatch) unless ProjectsHelper.ancestors.include?(RedmineRiskManagement::Patches::ProjectsHelperPatch)
+  IssueQuery.include(RedmineRiskManagement::Patches::IssueQueryPatch) unless IssueQuery.included_modules.include?(RedmineRiskManagement::Patches::IssueQueryPatch)
+  QueriesHelper.prepend(RedmineRiskManagement::Patches::QueriesHelperPatch) unless QueriesHelper.ancestors.include?(RedmineRiskManagement::Patches::QueriesHelperPatch)
   CustomFieldsHelper::CUSTOM_FIELDS_TABS << { name: 'RiskCustomField', partial: 'custom_fields/index', label: :label_risk_plural } unless CustomFieldsHelper::CUSTOM_FIELDS_TABS.any? { |t| t[:name] == 'RiskCustomField' }
 end

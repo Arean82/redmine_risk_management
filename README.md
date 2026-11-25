@@ -19,9 +19,9 @@
 
 ## 🌟 Executive Overview
 
-**Redmine Risk Management** delivers end-to-end operational governance and risk response management for engineering organizations and PMOs.
+**Redmine Risk Management** delivers end-to-end operational governance, risk response roadmapping, and schedule risk monitoring for enterprise project management offices (PMOs) and engineering organizations.
 
-Equipped with ISO 31000 response strategies, numerical scoring matrices, deadlines, heatmaps, and many-to-many issue bindings, it turns static risk tracking into an actionable operational workflow.
+Equipped with ISO 31000 response strategies, numerical scoring matrices, target deadlines, Easy8 visual heatmaps, project overview health widgets, and cross-cutting Redmine issue integration, it turns static risk tracking into an active operational workflow.
 
 Fully modernized for **Redmine 6.x and 7.0+**, **Rails 7/8**, **Ruby 4.0**, and the **Zeitwerk autoloading engine**.
 
@@ -38,7 +38,10 @@ Fully modernized for **Redmine 6.x and 7.0+**, **Rails 7/8**, **Ruby 4.0**, and 
 | **Action Deadlines** | None | **Direct `due_date` field with calendar picker and query filtering** |
 | **Issue Linkage** | 1-to-1 (`issues.risk_id`) | **Many-to-Many (`risk_issues`)** linking multiple issues to multiple risks |
 | **Query Engine** | Basic ActiveRecord pagination | **Full Redmine Standard `RiskQuery`** (filters, custom columns, sorting, CSV & PDF export) |
-| **Visual Dashboard** | None | **Interactive Risk Dashboard & Heatmap** (`RiskDashboardsController`) |
+| **Issue Query Integration**| None | **`Risks` Column & `Has Risk (Yes/No)` Filter** directly in Redmine's Issue list (`/issues`) |
+| **Schedule Exposure** | None | **Dynamic real-time delay badges** (`🔴 Overdue by X days`, `🟢 On Track`) on linked issues |
+| **Project Overview Health**| None | **Sidebar Risk Health Widget** on Redmine's Project Overview page (`view_projects_show_sidebar`) |
+| **Visual Dashboard** | None | **Easy8 Process Flow Ribbon & $4 \times 4$ Heatmap Matrix** (`RiskDashboardsController`) |
 | **Categories** | None | **Project-Level & Global Risk Categories** with dedicated Project Settings tab |
 | **Custom Fields** | None | **`RiskCustomField`** fully integrated into Redmine's custom field engine |
 | **Interactive AJAX Relations** | None | **AJAX Issue Linking & Unlinking** inline on Risk show view |
@@ -56,7 +59,7 @@ Fully modernized for **Redmine 6.x and 7.0+**, **Rails 7/8**, **Ruby 4.0**, and 
 ### 1. Identification & Categorization in Project or Global Risk Register
 - Project register at `/projects/:id/risks`.
 - Global cross-project register supported via `RiskQuery`.
-- Domain categorization via `RiskCategory` (project-specific & global levels).
+- Domain categorization via `RiskCategory` (project-specific & global levels) with dedicated Project Settings tab.
 
 ### 2. Qualitative & Quantitative Analysis for Risk Assessment
 - **Quantitative Analysis:** Numerical Probability ($1\text{--}4$) $\times$ Impact ($1\text{--}4$) = Criticality ($1\text{--}16$).
@@ -70,17 +73,20 @@ Fully modernized for **Redmine 6.x and 7.0+**, **Rails 7/8**, **Ruby 4.0**, and 
 - **Custom Fields:** Unlimited custom attributes via `RiskCustomField` (text, date, list, user, boolean).
 
 ### 4. Visualization in the Risk Matrix, Graphs and Indicators, Export
-- Interactive $4 \times 4$ Heatmap matrix on `/projects/:id/risks_dashboard`.
+- Interactive $4 \times 4$ Heatmap matrix on `/projects/:id/risks_dashboard` with gradient color zones.
 - Real-time risk density counters with severity color badges.
 - One-click **PDF** and **CSV** executive reports.
 
 ### 5. Tasks, Deadlines, Assignees for Action Steps Management
 - **Assignees:** Assign risks directly to users or groups (`assigned_to_id`).
-- **Deadlines:** Direct target resolution date (`due_date`) with date picker and query filtering.
-- **Action Tasks:** Direct many-to-many binding to actionable Redmine issues (`risk_issues`).
+- **Deadlines:** Dedicated target resolution date (`due_date`) with date picker and query filtering.
+- **Action Tasks:** Direct many-to-many binding to actionable Redmine issues (`risk_issues`) with interactive AJAX linking.
+- **Dynamic Schedule Exposure:** Real-time delay calculations (`Overdue by X days`, `Due in X days`, `On Track`) alongside linked issues.
 
 ### 6. Easy Risk Reporting and Overview for Management
 - Executive KPI Cards (Total Risks, Active/Open Risks, Resolved/Closed Risks).
+- Sidebar Risk Health Widget on Redmine's Project Overview page.
+- Direct **`Risks`** column and filter inside the main Redmine Issue list (`/issues`).
 - Top Critical Risks priority watchlist.
 - Category and Strategy distribution summaries.
 
@@ -172,6 +178,7 @@ redmine_risk_management/
 │   │   ├── risk_query.rb                           # Redmine Query engine implementation with filters & columns
 │   │   └── risk_custom_field.rb                    # CustomField integration for Risks
 │   └── views/
+│       ├── hooks/                                  # Project overview sidebar health widget
 │       ├── issues/                                 # Issue detail & form integration partials
 │       ├── projects/settings/                      # Project Settings "Risk categories" tab partial
 │       ├── risk_categories/                        # Category creation and edit forms
@@ -185,9 +192,12 @@ redmine_risk_management/
 └── lib/
     └── redmine_risk_management/
         ├── hooks/
-        │   └── views_issues_hook.rb                # View listener for issue pages
+        │   ├── views_issues_hook.rb                # View listener for issue pages
+        │   └── views_projects_hook.rb              # View listener for project overview sidebar
         └── patches/
             ├── issue_patch.rb                      # Issue association patch
+            ├── issue_query_patch.rb                # Issue list column & filter patch
+            ├── queries_helper_patch.rb             # Issue table badge renderer patch
             ├── project_patch.rb                    # Project association patch
             └── projects_helper_patch.rb            # ProjectsHelper prepend for project settings tab
 ```

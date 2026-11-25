@@ -19,6 +19,7 @@ class RiskStatus < ApplicationRecord
   def color_name
     return "#" + "%06x" % self.color unless self.color.nil?
   end
+  alias_method :color_to_hex, :color_name
 
   def color_name=(clr)
     self.color = clr.from(1).hex
