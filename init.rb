@@ -4,7 +4,7 @@ Redmine::Plugin.register :redmine_risk_management do
   name 'Redmine Risk Management plugin'
   author 'Arean Narrayan'
   description 'Enterprise ISO 31000 Risk Management plugin for Redmine'
-  version '0.0.6'
+  version '1.0.0'
   url 'https://github.com/Arean82/redmine_risk_management/'
   author_url 'https://github.com/Arean82'
 

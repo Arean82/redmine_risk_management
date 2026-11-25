@@ -2,7 +2,7 @@
 
 # 🛡️ Redmine Risk Management (Enterprise Edition)
 
-[![Version](https://img.shields.io/badge/version-0.0.6-emerald.svg?style=for-the-badge)](https://github.com/Arean82/redmine_risk_management/releases)
+[![Version](https://img.shields.io/badge/version-1.0.0-emerald.svg?style=for-the-badge)](https://github.com/Arean82/redmine_risk_management/releases)
 [![Redmine Compatibility](https://img.shields.io/badge/Redmine-6.x%20%7C%207.x-0284c7.svg?style=for-the-badge)](https://www.redmine.org/)
 [![Ruby Version](https://img.shields.io/badge/Ruby-3.x%20%7C%204.x-dc2626.svg?style=for-the-badge)](https://www.ruby-lang.org/)
 [![Rails Version](https://img.shields.io/badge/Rails-7.x%20%7C%208.x-ea580c.svg?style=for-the-badge)](https://rubyonrails.org/)
@@ -25,7 +25,7 @@ Fully modernized for **Redmine 6.x and 7.0+**, **Rails 7/8**, **Ruby 4.0**, and 
 
 ---
 
-## 🚀 Key Modernization Upgrades (v0.0.6)
+## 🚀 Key Modernization Upgrades (v1.0.0)
 
 | Layer | Legacy Implementation | Enterprise Modernized Implementation |
 | :--- | :--- | :--- |
