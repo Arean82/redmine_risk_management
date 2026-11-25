@@ -109,7 +109,10 @@ Y    +----------+----------+----------+----------+
 
 ## 🛠️ System Requirements
 
-- **Redmine:** `6.x`, `7.0.x`
+> [!IMPORTANT]
+> **Compatibility Notice:** Version 1.1.0+ is an enterprise release engineered specifically for modern Redmine architectures. It requires Redmine 6.x or Redmine 7.0+ and is **NOT compatible with Redmine 5.x or legacy Rails 5/6 stacks** due to strict Zeitwerk autoloading, `ApplicationRecord` inheritance, Rails 7+ database migrations, and Redmine's native `acts_as_positioned` engine.
+
+- **Redmine:** `6.x`, `7.0.x` (Redmine 5.x is unsupported)
 - **Ruby:** `3.0`, `3.1`, `3.2`, `3.3`, `3.4`, `4.0+`
 - **Rails:** `7.0`, `7.1`, `7.2`, `8.0`
 - **Database:** PostgreSQL 12+, MySQL 8+, MariaDB 10.5+, SQLite3

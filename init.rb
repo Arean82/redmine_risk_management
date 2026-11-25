@@ -8,6 +8,8 @@ Redmine::Plugin.register :redmine_risk_management do
   url 'https://github.com/Arean82/redmine_risk_management/'
   author_url 'https://github.com/Arean82'
 
+  requires_redmine version_or_higher: '6.0.0'
+
   settings default: {
     status: ['Identified', 'Monitored', 'Occurred', 'Dismissed']
   }, partial: 'settings/risks'
