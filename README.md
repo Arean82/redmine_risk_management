@@ -2,8 +2,8 @@
 
 # 🛡️ Redmine Risk Management (Enterprise Edition)
 
-[![Version](https://img.shields.io/badge/version-0.5.0-emerald.svg?style=for-the-badge)](https://github.com/Arean82/redmine_risk_management/releases)
-[![Redmine Compatibility](https://img.shields.io/badge/Redmine-5.x%20%7C%206.x%20%7C%207.x-0284c7.svg?style=for-the-badge)](https://www.redmine.org/)
+[![Version](https://img.shields.io/badge/version-0.0.6-emerald.svg?style=for-the-badge)](https://github.com/Arean82/redmine_risk_management/releases)
+[![Redmine Compatibility](https://img.shields.io/badge/Redmine-6.x%20%7C%207.x-0284c7.svg?style=for-the-badge)](https://www.redmine.org/)
 [![Ruby Version](https://img.shields.io/badge/Ruby-3.x%20%7C%204.x-dc2626.svg?style=for-the-badge)](https://www.ruby-lang.org/)
 [![Rails Version](https://img.shields.io/badge/Rails-6.1%20%7C%207.x%20%7C%208.x-ea580c.svg?style=for-the-badge)](https://rubyonrails.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-f59e0b.svg?style=for-the-badge)](LICENSE)
@@ -25,7 +25,7 @@ Modernized to **Platinum Standard**, this release features complete architectura
 
 ---
 
-## 🚀 Key Modernization Upgrades (v0.5.0)
+## 🚀 Key Modernization Upgrades (v0.0.6)
 
 | Layer | Legacy Implementation | Platinum Modernized Implementation |
 | :--- | :--- | :--- |
@@ -33,7 +33,7 @@ Modernized to **Platinum Standard**, this release features complete architectura
 | **Positioning Engine** | Obsolete `acts_as_list` gem | Native Redmine `Redmine::Acts::Positioned` (`acts_as_positioned`) |
 | **Loader Architecture** | `ActiveSupport::Dependencies` & `require_dependency` | `Rails.configuration.to_prepare` wrapped Zeitwerk safe patching |
 | **Ruby Runtime** | Ruby 2.x only | Full support for **Ruby 3.0 through Ruby 4.x** |
-| **Redmine Compatibility**| Redmine 4.x / early 5.x | Fully verified on **Redmine 5.x, 6.x, and Redmine 7.0+** |
+| **Redmine Compatibility**| Redmine 4.x / 5.x legacy | Fully verified on **Redmine 6.x and Redmine 7.0+** |
 | **Database Migrations** | Broke on Redmine 7 due to missing list methods | All 8 database migrations execute flawlessly |
 
 ---
@@ -91,7 +91,7 @@ Y    +----------+----------+----------+----------+
 
 ## 🛠️ System Requirements
 
-- **Redmine:** `5.0.x`, `5.1.x`, `6.x`, `7.0.x`
+- **Redmine:** `6.x`, `7.0.x`
 - **Ruby:** `3.0`, `3.1`, `3.2`, `3.3`, `3.4`, `4.0+`
 - **Rails:** `6.1`, `7.0`, `7.1`, `7.2`, `8.0`
 - **Database:** PostgreSQL 12+, MySQL 8+, MariaDB 10.5+, SQLite3
