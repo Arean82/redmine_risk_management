@@ -45,7 +45,7 @@ Fully modernized for **Redmine 6.x and 7.0+**, **Rails 7/8**, **Ruby 4.0**, and 
 | **Issue Query Integration**| None | **`Risks` Column & `Has Risk (Yes/No)` Filter** directly in Redmine's Issue list (`/issues`) |
 | **Schedule Exposure** | None | **Dynamic real-time delay badges** (`🔴 Overdue by X days`, `🟢 On Track`) on linked issues |
 | **Project Overview Health**| None | **Sidebar Risk Health Widget** on Redmine's Project Overview page (`view_projects_show_sidebar`) |
-| **Visual Dashboard** | None | **Easy8 Process Flow Ribbon & $4 \times 4$ Heatmap Matrix** (`RiskDashboardsController`) |
+| **Visual Dashboard** | None | **Easy8 Process Flow Ribbon & 4 × 4 Heatmap Matrix** (`RiskDashboardsController`) |
 | **Categories** | None | **Project-Level & Global Risk Categories** with dedicated Project Settings tab |
 | **Custom Fields** | None | **`RiskCustomField`** fully integrated into Redmine's custom field engine |
 | **Interactive AJAX Relations** | None | **AJAX Issue Linking & Unlinking** inline on Risk show view |
@@ -65,10 +65,12 @@ Fully modernized for **Redmine 6.x and 7.0+**, **Rails 7/8**, **Ruby 4.0**, and 
 - **Global Portfolio Register:** Accessible directly from Redmine's top navigation bar (`/global_risks`) for executives to monitor risk exposure across the entire organization.
 
 ### 2. Qualitative & Quantitative Analysis + Financial Exposure (EMV)
-- **Quantitative Scoring:** Probability ($1\text{--}4$) $\times$ Impact ($1\text{--}4$) = Criticality ($1\text{--}16$).
+- **Quantitative Scoring:** Probability (1–4) × Impact (1–4) = Criticality (1–16).
 - **Qualitative Rationales:** `Monitor` (1–4), `Plan Mitigation` (5–9), `Mitigate` (10–16).
 - **Financial Exposure:** Automated Expected Monetary Value calculation:
-  $$\text{EMV} = \text{Estimated Loss (\$)} \times \text{Calibrated Probability \%}$$
+  ```
+  EMV = Estimated Loss ($) × Calibrated Probability %
+  ```
 
 ### 3. Risk Velocity & Trend Audit
 - Automatically compares present criticality against previous evaluation:
