@@ -37,6 +37,14 @@
           <div class="label"><%= l(:field_assigned_to) %>:</div>
           <div class="value"><%= link_to_user(@risk.assigned_to) if @risk.assigned_to %></div>
         </div>
+        <div class="due-date attribute">
+          <div class="label"><%= l(:field_due_date) %>:</div>
+          <div class="value"><%= format_date(@risk.due_date) if @risk.due_date %></div>
+        </div>
+        <div class="strategy attribute">
+          <div class="label"><%= l(:field_strategy) %>:</div>
+          <div class="value"><span class="badge" style="background: #eceff1; padding: 2px 6px; border-radius: 3px; font-weight: 500;"><%= @risk.strategy&.humanize %></span></div>
+        </div>
       </div>
       <div class="splitcontentright">
         <div class="probability attribute">

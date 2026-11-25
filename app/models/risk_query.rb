@@ -12,6 +12,8 @@ class RiskQuery < Query
     QueryColumn.new(:impact, sortable: "#{Risk.table_name}.impact", groupable: true, default_order: 'desc', caption: :field_impact),
     QueryColumn.new(:criticality, sortable: "#{Risk.table_name}.criticality", groupable: true, default_order: 'desc', caption: :field_criticality),
     QueryColumn.new(:rationale, sortable: "#{Risk.table_name}.rationale", groupable: true, caption: :field_rationale),
+    QueryColumn.new(:strategy, sortable: "#{Risk.table_name}.strategy", groupable: true, caption: :field_strategy),
+    QueryColumn.new(:due_date, sortable: "#{Risk.table_name}.due_date", default_order: 'asc', caption: :field_due_date),
     QueryColumn.new(:user, sortable: lambda { User.fields_for_order_statement('users') }, groupable: true, caption: :field_author),
     QueryColumn.new(:assigned_to, sortable: lambda { User.fields_for_order_statement }, groupable: true, caption: :field_assigned_to),
     QueryColumn.new(:created_at, sortable: "#{Risk.table_name}.created_at", default_order: 'desc', caption: :field_created_on),
@@ -65,6 +67,13 @@ class RiskQuery < Query
                          type: :list,
                          values: Risk::RATIONALES.map { |r| [r, r] },
                          label: :field_rationale
+
+    add_available_filter 'strategy',
+                         type: :list,
+                         values: Risk::STRATEGIES.map { |s| [s.humanize, s] },
+                         label: :field_strategy
+
+    add_available_filter 'due_date', type: :date, label: :field_due_date
 
     add_available_filter 'user_id',
                          type: :list,

@@ -24,6 +24,12 @@
     </div>
     <div class="splitcontentright">
       <p>
+        <%= f.select :strategy, Risk::STRATEGIES.collect { |s| [s.humanize, s] }, label: :field_strategy %>
+      </p>
+      <p>
+        <%= f.date_field :due_date, label: :field_due_date, size: 10 %><%= calendar_for('risk_due_date') %>
+      </p>
+      <p>
         <%= f.select :probability, (1..4).collect { |p| [p, p] }, label: :field_probability %>
       </p>
       <p>

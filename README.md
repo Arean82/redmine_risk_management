@@ -19,7 +19,9 @@
 
 ## 🌟 Executive Overview
 
-**Redmine Risk Management** bridges the gap between project execution and operational governance. It equips project managers, risk officers, and engineering leads with quantitative/qualitative risk analysis tools, visual heatmaps, dynamic workflows, and issue linkages.
+**Redmine Risk Management** delivers end-to-end operational governance and risk response management for engineering organizations and PMOs.
+
+Equipped with ISO 31000 response strategies, numerical scoring matrices, deadlines, heatmaps, and many-to-many issue bindings, it turns static risk tracking into an actionable operational workflow.
 
 Fully modernized for **Redmine 6.x and 7.0+**, **Rails 7/8**, **Ruby 4.0**, and the **Zeitwerk autoloading engine**.
 
@@ -27,11 +29,13 @@ Fully modernized for **Redmine 6.x and 7.0+**, **Rails 7/8**, **Ruby 4.0**, and 
 
 ## 🚀 Key Modernization Upgrades (v1.0.0)
 
-| Layer | Legacy Implementation | Enterprise Modernized Implementation |
+| Layer | Legacy Implementation | Enterprise v1.0.0 Implementation |
 | :--- | :--- | :--- |
 | **Model Inheritance** | `ActiveRecord::Base` | `ApplicationRecord` (Rails 7+ standard) |
 | **Positioning Engine** | Obsolete `acts_as_list` gem | Native Redmine `Redmine::Acts::Positioned` (`acts_as_positioned`) |
 | **Loader Architecture** | `ActiveSupport::Dependencies` & `require_dependency` | `Rails.configuration.to_prepare` wrapped Zeitwerk-safe patching |
+| **Response Strategies** | Unstructured text | **Standard ISO 31000 Strategies** (`Mitigate`, `Accept`, `Transfer`, `Eliminate`) |
+| **Action Deadlines** | None | **Direct `due_date` field with calendar picker and query filtering** |
 | **Issue Linkage** | 1-to-1 (`issues.risk_id`) | **Many-to-Many (`risk_issues`)** linking multiple issues to multiple risks |
 | **Query Engine** | Basic ActiveRecord pagination | **Full Redmine Standard `RiskQuery`** (filters, custom columns, sorting, CSV & PDF export) |
 | **Visual Dashboard** | None | **Interactive Risk Dashboard & Heatmap** (`RiskDashboardsController`) |
@@ -47,15 +51,42 @@ Fully modernized for **Redmine 6.x and 7.0+**, **Rails 7/8**, **Ruby 4.0**, and 
 
 ---
 
-## 🎯 Core Features
+## 🎯 Core Capabilities Checklist
 
-### 1. Quantitative & Qualitative Risk Matrix
-- Automatically calculates risk **Criticality** on a calibrated $4 \times 4$ probability/impact grid:
-  $$\text{Criticality} = \text{Probability (1--4)} \times \text{Impact (1--4)}$$
-- Automatically computes standard mitigation rationales:
-  - **1 – 4:** `Monitor` *(Low exposure; periodic observation)*
-  - **5 – 9:** `Plan Mitigation` *(Medium exposure; mitigation roadmapping required)*
-  - **10 – 16:** `Mitigate` *(High exposure; urgent active remediation)*
+### 1. Identification & Categorization in Project or Global Risk Register
+- Project register at `/projects/:id/risks`.
+- Global cross-project register supported via `RiskQuery`.
+- Domain categorization via `RiskCategory` (project-specific & global levels).
+
+### 2. Qualitative & Quantitative Analysis for Risk Assessment
+- **Quantitative Analysis:** Numerical Probability ($1\text{--}4$) $\times$ Impact ($1\text{--}4$) = Criticality ($1\text{--}16$).
+- **Qualitative Analysis:** Calibrated matrix levels (`Monitor`, `Plan Mitigation`, `Mitigate`).
+
+### 3. Customizable Attributes: Probability, Impact, Severity, Response
+- **Probability & Impact:** Calibrated scale from 1 to 4.
+- **Severity / Criticality:** Computed product score from 1 to 16.
+- **Response Strategy:** Standardized ISO classification (`Mitigate`, `Accept`, `Transfer`, `Eliminate`).
+- **Treatments & Lessons:** Rich wiki-formatted text areas for mitigation plans and post-event lessons learned.
+- **Custom Fields:** Unlimited custom attributes via `RiskCustomField` (text, date, list, user, boolean).
+
+### 4. Visualization in the Risk Matrix, Graphs and Indicators, Export
+- Interactive $4 \times 4$ Heatmap matrix on `/projects/:id/risks_dashboard`.
+- Real-time risk density counters with severity color badges.
+- One-click **PDF** and **CSV** executive reports.
+
+### 5. Tasks, Deadlines, Assignees for Action Steps Management
+- **Assignees:** Assign risks directly to users or groups (`assigned_to_id`).
+- **Deadlines:** Direct target resolution date (`due_date`) with date picker and query filtering.
+- **Action Tasks:** Direct many-to-many binding to actionable Redmine issues (`risk_issues`).
+
+### 6. Easy Risk Reporting and Overview for Management
+- Executive KPI Cards (Total Risks, Active/Open Risks, Resolved/Closed Risks).
+- Top Critical Risks priority watchlist.
+- Category and Strategy distribution summaries.
+
+---
+
+## 📊 Criticality Matrix & Scoring
 
 ```text
                   I M P A C T
@@ -74,38 +105,6 @@ I  1 |    1     |    2     |    3     |    4     |  Low / Minor
 T    | (Monitor)| (Monitor)| (Monitor)| (Monitor)|
 Y    +----------+----------+----------+----------+
 ```
-
-### 2. Visual Risk Dashboard & Heatmap
-- Dedicated project dashboard page (`/projects/:project_id/risks_dashboard`).
-- Visual $4 \times 4$ heatmap card matrix with real-time risk density distribution.
-- Executive KPI cards for Total, Active (Open), and Resolved (Closed) risks.
-- Top Critical Risks priority watchlist.
-- Category and Mitigation Rationale breakdown.
-
-### 3. Redmine Standard Query System (`RiskQuery`)
-- Filter risks dynamically by Status (Open/Closed/Any), Project, Category, Assignee, Author, Probability, Impact, and Criticality.
-- Custom column selection, group-by grouping, and multi-criteria sorting.
-- One-click **CSV** and **PDF** exports with complete metadata.
-
-### 4. Many-to-Many Issue Linkage & AJAX Relations
-- Associate any number of Redmine issues to a risk, and link multiple risks to an issue.
-- Interactive inline AJAX form to link or unlink issues directly on the risk details page without page reload.
-- Real-time risk severity badges directly on the issue detail header.
-
-### 5. Project-Level Risk Categories
-- Organize risks by domain categories (e.g., *Security*, *Infrastructure*, *Operational*, *Legal*).
-- Managed directly inside Redmine's **Project Settings → Risk categories** tab or globally in Plugin Configuration.
-
-### 6. Full Journal Audit Trail & Discussion History
-- Every update to a risk creates a Redmine journal entry tracking changed fields before and after.
-- Team members can add timestamped notes, comments, and discussion threads to risks.
-
-### 7. Risk Custom Fields
-- Add custom fields of any standard Redmine format (Text, Date, List, User, Boolean, etc.) to Risks via **Administration → Custom fields → Risks**.
-
-### 8. Interactive Context Menu & Bulk Operations
-- Right-click any risk row in the risks list to trigger instant status updates, category reassignments, or deletions.
-- Check multiple risks to perform bulk edits and mass updates in one click.
 
 ---
 
@@ -142,18 +141,6 @@ sudo systemctl restart redmine
 # Or touch restart.txt
 touch /data/redmine/tmp/restart.txt
 ```
-
----
-
-## ⚙️ Administration & Permissions
-
-1. Go to **Administration → Roles and permissions**.
-2. Under the **Risks** section, configure the following granular permissions:
-   - `View risks`: Access risk lists, details, and dashboard.
-   - `Add risks`: Create new project risks.
-   - `Edit risks`: Update risks, log journal notes, and link issues.
-   - `Delete risks`: Delete individual or bulk risks.
-   - `Manage risk categories`: Create and manage project-level risk categories.
 
 ---
 
@@ -194,7 +181,7 @@ redmine_risk_management/
 │       ├── risks/                                  # Matrix index, details, relations partial, history, bulk edit
 │       └── settings/                               # Plugin global settings partials
 ├── db/
-│   └── migrate/                                    # Database migrations (001–009)
+│   └── migrate/                                    # Database migrations (001–010)
 └── lib/
     └── redmine_risk_management/
         ├── hooks/

@@ -176,20 +176,22 @@ class RisksController < ApplicationController
 
     pdf.SetFontStyle('B', 9)
     pdf.Cell(15, 6, '#', 1, 0, 'C')
-    pdf.Cell(80, 6, l(:field_title), 1, 0, 'L')
-    pdf.Cell(30, 6, l(:field_status), 1, 0, 'C')
-    pdf.Cell(30, 6, l(:field_category), 1, 0, 'C')
+    pdf.Cell(60, 6, l(:field_title), 1, 0, 'L')
+    pdf.Cell(25, 6, l(:field_status), 1, 0, 'C')
+    pdf.Cell(25, 6, l(:field_strategy), 1, 0, 'C')
+    pdf.Cell(25, 6, l(:field_due_date), 1, 0, 'C')
     pdf.Cell(25, 6, l(:field_criticality), 1, 0, 'C')
-    pdf.Cell(40, 6, l(:field_rationale), 1, 1, 'C')
+    pdf.Cell(35, 6, l(:field_rationale), 1, 1, 'C')
 
     pdf.SetFontStyle('', 8)
     risks.each do |r|
       pdf.Cell(15, 6, r.id.to_s, 1, 0, 'C')
-      pdf.Cell(80, 6, r.title.to_s.truncate(45), 1, 0, 'L')
-      pdf.Cell(30, 6, r.risk_status.name, 1, 0, 'C')
-      pdf.Cell(30, 6, (r.category&.name || '-').truncate(18), 1, 0, 'C')
+      pdf.Cell(60, 6, r.title.to_s.truncate(35), 1, 0, 'L')
+      pdf.Cell(25, 6, r.risk_status.name, 1, 0, 'C')
+      pdf.Cell(25, 6, r.strategy.to_s.humanize, 1, 0, 'C')
+      pdf.Cell(25, 6, r.due_date ? format_date(r.due_date) : '-', 1, 0, 'C')
       pdf.Cell(25, 6, "#{r.criticality} (P:#{r.probability} I:#{r.impact})", 1, 0, 'C')
-      pdf.Cell(40, 6, r.rationale.to_s, 1, 1, 'C')
+      pdf.Cell(35, 6, r.rationale.to_s, 1, 1, 'C')
     end
     pdf.output
   end

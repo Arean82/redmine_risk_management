@@ -5,6 +5,7 @@ class Risk < ApplicationRecord
 
   PER_PAGE   = 30
   RATIONALES = ['Monitor', 'Plan Mitigation', 'Mitigate'].freeze
+  STRATEGIES = ['mitigate', 'accept', 'transfer', 'eliminate'].freeze
 
   belongs_to :project
   belongs_to :risk_status
@@ -34,6 +35,7 @@ class Risk < ApplicationRecord
   validates :criticality, numericality: true, allow_nil: true
   validates :probability, :impact, numericality: { greater_than: 0, less_than: 5 }
   validates :rationale, inclusion: { in: RATIONALES }, allow_nil: true
+  validates :strategy, inclusion: { in: STRATEGIES }, allow_nil: true
 
   before_save :set_criticality_rationale, :update_closed_status
   after_save :create_journal
@@ -42,7 +44,8 @@ class Risk < ApplicationRecord
   attr_accessor :notes
 
   safe_attributes 'title', 'description', 'probability', 'impact', 'risk_status_id',
-                  'category_id', 'assigned_to_id', 'treatments', 'lessons', 'issue_ids', 'notes'
+                  'category_id', 'assigned_to_id', 'treatments', 'lessons', 'issue_ids', 'notes',
+                  'due_date', 'strategy'
 
   scope :open_risks, -> { joins(:risk_status).where(risk_statuses: { status_type: 'open' }) }
   scope :closed_risks, -> { joins(:risk_status).where(risk_statuses: { status_type: 'closed' }) }

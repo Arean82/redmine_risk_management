@@ -13,6 +13,8 @@ en:
   field_treatments: Treatments / Response Strategy
   field_lessons: Lessons Learned
   field_category: Risk Category
+  field_strategy: Mitigation Strategy
+  field_due_date: Deadline / Due Date
 
   label_risk: Risk
   label_risk_plural: Risks
