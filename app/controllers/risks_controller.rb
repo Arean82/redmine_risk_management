@@ -4,10 +4,10 @@ class RisksController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_action :find_project_by_project_id, only: [:index, :new, :create]
+  before_action :find_project_by_project_id, only: [:index, :new, :create, :preview]
   before_action :find_risk, only: [:show, :edit, :update, :destroy]
   before_action :find_risks, only: [:bulk_edit, :bulk_update, :bulk_destroy]
-  before_action :authorize, except: [:index, :bulk_edit, :bulk_update, :bulk_destroy]
+  before_action :authorize, except: [:index, :bulk_edit, :bulk_update, :bulk_destroy, :preview]
   before_action :authorize_global, only: [:bulk_edit, :bulk_update, :bulk_destroy]
 
   def index
@@ -25,6 +25,7 @@ class RisksController < ApplicationController
         format.html
         format.api
         format.csv  { send_data(query_to_csv(@risks, @query, params[:csv]), type: 'text/csv; header=present', filename: 'risks.csv') }
+        format.pdf  { send_data(risks_to_pdf(@risks, @project, @query), type: 'application/pdf', filename: 'risks.pdf') }
       end
     else
       respond_to do |format|
@@ -42,6 +43,12 @@ class RisksController < ApplicationController
     @journals.reject!(&:private_notes?) unless User.current.allowed_to?(:view_private_notes, @risk.project)
     Journal.preload_journals_details_reflected_objects(@journals)
     @journals.reverse! if User.current.wants_comments_in_reverse_order?
+
+    respond_to do |format|
+      format.html
+      format.api
+      format.pdf { send_data(risk_to_pdf(@risk), type: 'application/pdf', filename: "risk-#{@risk.id}.pdf") }
+    end
   end
 
   def new
@@ -129,6 +136,11 @@ class RisksController < ApplicationController
     redirect_back_or_default project_risks_path(@project || @risks.first.project)
   end
 
+  def preview
+    @text = params[:text] || (params[:risk] && params[:risk][:description])
+    render partial: 'common/preview'
+  end
+
   private
 
   def find_risk
@@ -151,5 +163,52 @@ class RisksController < ApplicationController
     attributes ||= params || {}
     attributes.delete_if { |k, v| v.blank? }
     attributes
+  end
+
+  def risks_to_pdf(risks, project, query)
+    pdf = Redmine::Export::PDF::ITCPDF.new(current_language)
+    pdf.set_title("#{project || Setting.app_title} - #{l(:label_risk_plural)}")
+    pdf.alias_nb_pages
+    pdf.footer_date = format_date(Date.today)
+    pdf.add_page('L')
+    pdf.SetFontStyle('B', 12)
+    pdf.Cell(0, 10, "#{l(:label_risk_plural)} - #{project ? project.name : Setting.app_title}", 0, 1)
+
+    pdf.SetFontStyle('B', 9)
+    pdf.Cell(15, 6, '#', 1, 0, 'C')
+    pdf.Cell(80, 6, l(:field_title), 1, 0, 'L')
+    pdf.Cell(30, 6, l(:field_status), 1, 0, 'C')
+    pdf.Cell(30, 6, l(:field_category), 1, 0, 'C')
+    pdf.Cell(25, 6, l(:field_criticality), 1, 0, 'C')
+    pdf.Cell(40, 6, l(:field_rationale), 1, 1, 'C')
+
+    pdf.SetFontStyle('', 8)
+    risks.each do |r|
+      pdf.Cell(15, 6, r.id.to_s, 1, 0, 'C')
+      pdf.Cell(80, 6, r.title.to_s.truncate(45), 1, 0, 'L')
+      pdf.Cell(30, 6, r.risk_status.name, 1, 0, 'C')
+      pdf.Cell(30, 6, (r.category&.name || '-').truncate(18), 1, 0, 'C')
+      pdf.Cell(25, 6, "#{r.criticality} (P:#{r.probability} I:#{r.impact})", 1, 0, 'C')
+      pdf.Cell(40, 6, r.rationale.to_s, 1, 1, 'C')
+    end
+    pdf.output
+  end
+
+  def risk_to_pdf(risk)
+    pdf = Redmine::Export::PDF::ITCPDF.new(current_language)
+    pdf.set_title("#{l(:label_risk)} ##{risk.id}")
+    pdf.alias_nb_pages
+    pdf.footer_date = format_date(Date.today)
+    pdf.add_page('P')
+    pdf.SetFontStyle('B', 14)
+    pdf.Cell(0, 10, "#{l(:label_risk)} ##{risk.id}: #{risk.title}", 0, 1)
+    pdf.SetFontStyle('', 9)
+    pdf.Cell(0, 6, "#{l(:field_status)}: #{risk.risk_status.name} | #{l(:field_criticality)}: #{risk.criticality} (#{risk.rationale})", 0, 1)
+    pdf.Ln(4)
+    pdf.SetFontStyle('B', 10)
+    pdf.Cell(0, 6, l(:field_description), 0, 1)
+    pdf.SetFontStyle('', 9)
+    pdf.MultiCell(0, 6, risk.description.to_s, 0, 'L')
+    pdf.output
   end
 end

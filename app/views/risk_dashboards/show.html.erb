@@ -1,0 +1,107 @@
+<div class="contextual">
+  <%= link_to l(:label_risk_plural), project_risks_path(@project), class: 'icon icon-list' %>
+</div>
+
+<h2><%= l(:label_risk_plural) %>: <%= l(:label_dashboard) rescue 'Dashboard & Heatmap' %></h2>
+
+<div class="splitcontent">
+  <div class="splitcontentleft">
+    <div class="box">
+      <h3 style="margin-top: 0;"><%= l(:label_summary) rescue 'Summary' %></h3>
+      <div style="display: flex; gap: 15px; margin-bottom: 10px;">
+        <div style="flex: 1; text-align: center; background: #e3f2fd; padding: 10px; border-radius: 4px;">
+          <div style="font-size: 24px; font-weight: bold; color: #1565c0;"><%= @total_count %></div>
+          <div style="color: #555; font-size: 0.9em;"><%= l(:label_total) rescue 'Total' %></div>
+        </div>
+        <div style="flex: 1; text-align: center; background: #ffebee; padding: 10px; border-radius: 4px;">
+          <div style="font-size: 24px; font-weight: bold; color: #c62828;"><%= @open_count %></div>
+          <div style="color: #555; font-size: 0.9em;"><%= l(:label_open_issues) rescue 'Active / Open' %></div>
+        </div>
+        <div style="flex: 1; text-align: center; background: #e8f5e9; padding: 10px; border-radius: 4px;">
+          <div style="font-size: 24px; font-weight: bold; color: #2e7d32;"><%= @closed_count %></div>
+          <div style="color: #555; font-size: 0.9em;"><%= l(:label_closed_issues) rescue 'Resolved / Closed' %></div>
+        </div>
+      </div>
+
+      <h4><%= l(:label_rationale_distribution) rescue 'Mitigation Rationales' %></h4>
+      <ul>
+        <li><strong style="color: #c62828;">Mitigate (Score 10-16):</strong> <%= @rationale_counts['Mitigate'] || 0 %></li>
+        <li><strong style="color: #ef6c00;">Plan Mitigation (Score 5-9):</strong> <%= @rationale_counts['Plan Mitigation'] || 0 %></li>
+        <li><strong style="color: #2e7d32;">Monitor (Score 1-4):</strong> <%= @rationale_counts['Monitor'] || 0 %></li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h3 style="margin-top: 0;"><%= l(:label_top_risks) rescue 'Top Critical Risks' %></h3>
+      <% if @top_risks.any? %>
+        <table class="list">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th><%= l(:field_title) %></th>
+              <th><%= l(:field_criticality) %></th>
+              <th><%= l(:field_status) %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @top_risks.each do |risk| %>
+              <tr>
+                <td><%= link_to risk.id, project_risk_path(@project, risk) %></td>
+                <td><%= link_to risk.title, project_risk_path(@project, risk) %></td>
+                <td><strong style="color: #c62828;"><%= risk.criticality %></strong></td>
+                <td><%= risk.risk_status.name %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p class="nodata"><%= l(:label_no_data) %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="splitcontentright">
+    <div class="box">
+      <h3 style="margin-top: 0;"><%= l(:label_risk_matrix) rescue 'Probability vs Impact Heatmap' %></h3>
+      <table style="width: 100%; border-collapse: separate; border-spacing: 4px; text-align: center;">
+        <thead>
+          <tr>
+            <th style="width: 25%; font-size: 0.85em;">Prob \ Impact</th>
+            <th style="width: 18%;">1 (Minor)</th>
+            <th style="width: 18%;">2 (Mod)</th>
+            <th style="width: 18%;">3 (Sig)</th>
+            <th style="width: 18%;">4 (Crit)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% [4, 3, 2, 1].each do |p| %>
+            <tr>
+              <th style="font-size: 0.85em; text-align: right; padding-right: 5px;"><%= p %></th>
+              <% (1..4).each do |i| %>
+                <%
+                  score = p * i
+                  bg = score >= 10 ? '#ffcdd2' : (score >= 5 ? '#ffe0b2' : '#c8e6c9')
+                  border = score >= 10 ? '#e57373' : (score >= 5 ? '#ffb74d' : '#81c784')
+                  count = @matrix[[p, i]] || 0
+                %>
+                <td style="background-color: <%= bg %>; border: 1px solid <%= border %>; border-radius: 4px; padding: 10px 0;">
+                  <div style="font-weight: bold; font-size: 16px;"><%= count %></div>
+                  <div style="font-size: 10px; color: #555;">score: <%= score %></div>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="box">
+      <h3 style="margin-top: 0;"><%= l(:field_category) %> <%= l(:label_distribution) rescue 'Breakdown' %></h3>
+      <ul>
+        <% @category_counts.each do |cat, cnt| %>
+          <li><strong><%= cat %>:</strong> <%= cnt %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>

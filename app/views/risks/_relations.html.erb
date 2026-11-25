@@ -1,0 +1,48 @@
+<div class="contextual">
+  <% if User.current.allowed_to?(:edit_risks, @risk.project) %>
+    <%= toggle_link l(:button_add), 'new-relation-form', focus: 'relation_issue_to_id' %>
+  <% end %>
+</div>
+
+<p><strong><%= l(:label_related_issues) %></strong></p>
+
+<% if User.current.allowed_to?(:edit_risks, @risk.project) %>
+  <%= form_tag(risk_issues_path(@risk), id: 'new-relation-form', remote: true, method: :post, style: 'display: none; margin-bottom: 10px;') do %>
+    <%= l(:label_issue) %> #<%= text_field_tag 'issue_id', '', size: 10, id: 'relation_issue_to_id' %>
+    <%= submit_tag l(:button_add) %>
+    <%= toggle_link l(:button_cancel), 'new-relation-form' %>
+  <% end %>
+<% end %>
+
+<% if @risk.issues.any? %>
+  <table class="list issues">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th><%= l(:field_project) %></th>
+        <th><%= l(:field_tracker) %></th>
+        <th><%= l(:field_subject) %></th>
+        <th><%= l(:field_status) %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @risk.issues.each do |issue| %>
+        <tr id="relation-<%= issue.id %>" class="hascontextmenu <%= cycle('odd', 'even') %>">
+          <td class="id"><%= link_to issue.id, issue_path(issue) %></td>
+          <td class="project"><%= link_to_project(issue.project) %></td>
+          <td class="tracker"><%= issue.tracker.name %></td>
+          <td class="subject"><%= link_to issue.subject, issue_path(issue) %></td>
+          <td class="status"><%= issue.status.name %></td>
+          <td class="buttons">
+            <% if User.current.allowed_to?(:edit_risks, @risk.project) %>
+              <%= link_to l(:button_delete), risk_issue_path(@risk, issue), remote: true, method: :delete, data: { confirm: l(:text_are_you_sure) }, class: 'icon-only icon-del' %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>

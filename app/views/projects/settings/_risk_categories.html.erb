@@ -1,0 +1,34 @@
+<div class="contextual">
+  <%= link_to l(:label_risk_category_new), new_project_risk_category_path(@project), class: 'icon icon-add' %>
+</div>
+
+<h3><%= l(:label_risk_category_plural) %></h3>
+
+<% categories = @project.risk_categories.ordered %>
+<% if categories.empty? %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+  <table class="list risk_categories">
+    <thead>
+      <tr>
+        <th><%= l(:field_name) %></th>
+        <th><%= l(:label_risk_plural) %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% categories.each do |category| %>
+        <tr class="<%= cycle('odd', 'even') %>">
+          <td class="name">
+            <%= link_to category.name, edit_project_risk_category_path(@project, category) %>
+          </td>
+          <td align="center"><%= category.risks.count %></td>
+          <td class="buttons">
+            <%= link_to l(:button_edit), edit_project_risk_category_path(@project, category), class: 'icon-only icon-edit' %>
+            <%= link_to l(:button_delete), project_risk_category_path(@project, category), method: :delete, data: { confirm: l(:text_are_you_sure) }, class: 'icon-only icon-del' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

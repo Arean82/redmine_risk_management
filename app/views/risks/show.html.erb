@@ -1,4 +1,5 @@
 <div class="contextual">
+  <%= link_to 'PDF', project_risk_path(@risk.project, @risk, format: 'pdf'), class: 'icon icon-pdf' %>
   <%= link_to l(:button_edit), edit_project_risk_path(@risk.project, @risk), class: 'icon icon-edit' if User.current.allowed_to?(:edit_risks, @risk.project) %>
   <%= link_to l(:button_delete), project_risk_path(@risk.project, @risk), method: :delete, data: { confirm: l(:text_are_you_sure) }, class: 'icon icon-del' if User.current.allowed_to?(:delete_risks, @risk.project) %>
 </div>
@@ -86,34 +87,7 @@
 
 <hr />
 <div id="issue_tree">
-  <div class="contextual"></div>
-  <p><strong><%= l(:label_related_issues) %></strong></p>
-  <% if @risk.issues.any? %>
-    <table class="list issues">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th><%= l(:field_project) %></th>
-          <th><%= l(:field_tracker) %></th>
-          <th><%= l(:field_subject) %></th>
-          <th><%= l(:field_status) %></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @risk.issues.each do |issue| %>
-          <tr class="hascontextmenu <%= cycle('odd', 'even') %>">
-            <td class="id"><%= link_to issue.id, issue_path(issue) %></td>
-            <td class="project"><%= link_to_project(issue.project) %></td>
-            <td class="tracker"><%= issue.tracker.name %></td>
-            <td class="subject"><%= link_to issue.subject, issue_path(issue) %></td>
-            <td class="status"><%= issue.status.name %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  <% else %>
-    <p class="nodata"><%= l(:label_no_data) %></p>
-  <% end %>
+  <%= render partial: 'relations' %>
 </div>
 
 <% if @journals.present? %>
