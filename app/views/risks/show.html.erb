@@ -57,8 +57,24 @@
         </div>
         <div class="criticality attribute">
           <div class="label"><%= l(:field_criticality) %>:</div>
-          <div class="value"><strong><%= @risk.criticality %></strong> (<%= @risk.rationale %>)</div>
+          <div class="value">
+            <strong><%= @risk.criticality %></strong> (<%= @risk.rationale %>)
+            <% case @risk.velocity_trend %>
+            <% when 'escalated' %>
+              <span style="color: #dc2626; font-size: 11px; font-weight: bold; margin-left: 6px;">▲ Escalated (was <%= @risk.previous_criticality %>)</span>
+            <% when 'mitigated' %>
+              <span style="color: #16a34a; font-size: 11px; font-weight: bold; margin-left: 6px;">▼ Mitigated (was <%= @risk.previous_criticality %>)</span>
+            <% end %>
+          </div>
         </div>
+        <% if @risk.estimated_cost && @risk.estimated_cost > 0 %>
+          <div class="financial-exposure attribute">
+            <div class="label">Financial Exposure:</div>
+            <div class="value">
+              <strong><%= number_to_currency(@risk.estimated_cost) %></strong> (EMV: <span style="color: #c2410c; font-weight: bold;"><%= number_to_currency(@risk.emv) %></span>)
+            </div>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>

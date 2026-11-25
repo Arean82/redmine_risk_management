@@ -24,6 +24,9 @@ Redmine::Plugin.register :redmine_risk_management do
 
   menu :project_menu, :risks, { controller: :risks, action: :index },
        caption: :label_risk_plural, before: :settings, param: :project_id
+
+  menu :top_menu, :risks, { controller: :risks, action: :index, project_id: nil },
+       caption: :label_risk_plural, if: proc { User.current.logged? }
 end
 
 require_relative 'lib/redmine_risk_management/hooks/views_issues_hook'

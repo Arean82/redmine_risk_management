@@ -4,7 +4,8 @@ class RisksController < ApplicationController
   helper :sort
   include SortHelper
 
-  before_action :find_project_by_project_id, only: [:index, :new, :create, :preview]
+  before_action :find_project_by_project_id, only: [:new, :create, :preview]
+  before_action :find_optional_project, only: [:index]
   before_action :find_risk, only: [:show, :edit, :update, :destroy]
   before_action :find_risks, only: [:bulk_edit, :bulk_update, :bulk_destroy]
   before_action :authorize, except: [:index, :bulk_edit, :bulk_update, :bulk_destroy, :preview]
@@ -181,6 +182,7 @@ class RisksController < ApplicationController
     pdf.Cell(25, 6, l(:field_strategy), 1, 0, 'C')
     pdf.Cell(25, 6, l(:field_due_date), 1, 0, 'C')
     pdf.Cell(25, 6, l(:field_criticality), 1, 0, 'C')
+    pdf.Cell(30, 6, 'EMV ($)', 1, 0, 'C')
     pdf.Cell(35, 6, l(:field_rationale), 1, 1, 'C')
 
     pdf.SetFontStyle('', 8)
@@ -191,6 +193,7 @@ class RisksController < ApplicationController
       pdf.Cell(25, 6, r.strategy.to_s.humanize, 1, 0, 'C')
       pdf.Cell(25, 6, r.due_date ? format_date(r.due_date) : '-', 1, 0, 'C')
       pdf.Cell(25, 6, "#{r.criticality} (P:#{r.probability} I:#{r.impact})", 1, 0, 'C')
+      pdf.Cell(30, 6, r.emv.to_f > 0 ? "$#{r.emv}" : '-', 1, 0, 'C')
       pdf.Cell(35, 6, r.rationale.to_s, 1, 1, 'C')
     end
     pdf.output

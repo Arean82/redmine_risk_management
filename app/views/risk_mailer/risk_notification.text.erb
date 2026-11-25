@@ -1,0 +1,16 @@
+<%= l(:label_risk) %> #<%= @risk.id %>: <%= @risk.title %>
+<%= @risk_url %>
+
+<%= l(:field_project) %>: <%= @project.name %>
+<%= l(:field_status) %>: <%= @risk.risk_status.name %>
+<%= l(:field_criticality) %>: <%= @risk.criticality %> (<%= @risk.rationale %>)
+<%= l(:field_strategy) %>: <%= @risk.strategy.to_s.humanize %>
+<% if @risk.due_date %>
+<%= l(:field_due_date) %>: <%= format_date(@risk.due_date) %>
+<% end %>
+<% if @risk.estimated_cost && @risk.estimated_cost > 0 %>
+Estimated Cost: <%= number_to_currency(@risk.estimated_cost) %> (EMV: <%= number_to_currency(@risk.emv) %>)
+<% end %>
+
+<%= l(:field_description) %>:
+<%= @risk.description %>

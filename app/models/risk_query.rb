@@ -13,6 +13,8 @@ class RiskQuery < Query
     QueryColumn.new(:criticality, sortable: "#{Risk.table_name}.criticality", groupable: true, default_order: 'desc', caption: :field_criticality),
     QueryColumn.new(:rationale, sortable: "#{Risk.table_name}.rationale", groupable: true, caption: :field_rationale),
     QueryColumn.new(:strategy, sortable: "#{Risk.table_name}.strategy", groupable: true, caption: :field_strategy),
+    QueryColumn.new(:estimated_cost, sortable: "#{Risk.table_name}.estimated_cost", default_order: 'desc', caption: 'Estimated Cost'),
+    QueryColumn.new(:emv, sortable: "#{Risk.table_name}.emv", default_order: 'desc', caption: 'EMV (Exposure)'),
     QueryColumn.new(:due_date, sortable: "#{Risk.table_name}.due_date", default_order: 'asc', caption: :field_due_date),
     QueryColumn.new(:user, sortable: lambda { User.fields_for_order_statement('users') }, groupable: true, caption: :field_author),
     QueryColumn.new(:assigned_to, sortable: lambda { User.fields_for_order_statement }, groupable: true, caption: :field_assigned_to),

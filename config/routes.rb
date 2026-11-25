@@ -21,4 +21,5 @@ resources :risks, except: [:index, :new, :create] do
 end
 
 match '/risks_context_menu', to: 'risk_context_menus#index', as: 'risks_context_menu', via: [:get, :post]
+get '/global_risks', to: 'risks#index', as: 'global_risks'
 resources :risk_statuses

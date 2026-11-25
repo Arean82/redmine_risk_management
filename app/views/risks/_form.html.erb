@@ -27,6 +27,9 @@
         <%= f.select :strategy, Risk::STRATEGIES.collect { |s| [s.humanize, s] }, label: :field_strategy %>
       </p>
       <p>
+        <%= f.text_field :estimated_cost, label: 'Estimated Loss / Cost ($)', size: 15 %>
+      </p>
+      <p>
         <%= f.date_field :due_date, label: :field_due_date, size: 10 %><%= calendar_for('risk_due_date') %>
       </p>
       <p>

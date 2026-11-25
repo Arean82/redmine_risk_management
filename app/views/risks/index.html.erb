@@ -1,11 +1,13 @@
 <div class="contextual">
-  <%= link_to l(:label_dashboard) rescue 'Dashboard', project_risks_dashboard_path(@project), class: 'icon icon-stats' %>
-  <%= link_to l(:label_new_risk), new_project_risk_path(@project), class: 'icon icon-add' if User.current.allowed_to?(:add_risks, @project) %>
+  <% if @project %>
+    <%= link_to l(:label_dashboard) rescue 'Dashboard', project_risks_dashboard_path(@project), class: 'icon icon-stats' %>
+    <%= link_to l(:label_new_risk), new_project_risk_path(@project), class: 'icon icon-add' if User.current.allowed_to?(:add_risks, @project) %>
+  <% end %>
 </div>
 
-<h2><%= l(:label_risk_plural) %></h2>
+<h2><%= @project ? l(:label_risk_plural) : 'Global Risk Register (All Projects)' %></h2>
 
-<%= form_tag(project_risks_path(@project), method: :get, id: 'query_form') do %>
+<%= form_tag(@project ? project_risks_path(@project) : global_risks_path, method: :get, id: 'query_form') do %>
   <%= render partial: 'queries/query_form' %>
 <% end %>
 
