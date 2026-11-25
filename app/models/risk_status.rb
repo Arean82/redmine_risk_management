@@ -1,11 +1,9 @@
-class RiskStatus < ActiveRecord::Base
-  # unloadable
-
+class RiskStatus < ApplicationRecord
   include Redmine::SafeAttributes
 
   STATUS_TYPE = ['open', 'closed']
 
-  acts_as_list :scope => 'status_type = \'#{status_type}\''
+  acts_as_positioned :scope => :status_type
 
   has_many :risks
 
@@ -29,7 +27,6 @@ class RiskStatus < ActiveRecord::Base
   def self.default
     where(is_default: true).first
   end
-
 
 private
 

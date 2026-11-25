@@ -1,14 +1,12 @@
-#require 'redmine_risk_management'
 require 'redmine'
 
 Redmine::Plugin.register :redmine_risk_management do
   name 'Redmine Risk Management plugin'
   author 'Arean Narrayan'
   description 'Risk management plugin for Redmine'
-  version '0.5'
+  version '0.5.0'
   url 'https://github.com/Arean82/redmine_risk_management/'
   author_url 'https://github.com/Arean82'
-  
 
   settings default: {
     status: ['Identified', 'Monitored', 'Occurred', 'Dismissed']
@@ -23,4 +21,11 @@ Redmine::Plugin.register :redmine_risk_management do
 
   menu :project_menu, :risks, { controller: :risks, action: :index },
        caption: :label_risk_plural, before: :settings, param: :project_id
+end
+
+require_relative 'lib/redmine_risk_management/hooks/views_issues_hook'
+
+Rails.configuration.to_prepare do
+  Issue.include(RedmineRiskManagement::Patches::IssuePatch) unless Issue.included_modules.include?(RedmineRiskManagement::Patches::IssuePatch)
+  Project.include(RedmineRiskManagement::Patches::ProjectPatch) unless Project.included_modules.include?(RedmineRiskManagement::Patches::ProjectPatch)
 end

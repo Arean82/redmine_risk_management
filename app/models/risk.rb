@@ -1,6 +1,4 @@
-class Risk < ActiveRecord::Base
-  # unloadable
-
+class Risk < ApplicationRecord
   include Redmine::SafeAttributes
 
   PER_PAGE   = 30
@@ -18,8 +16,6 @@ class Risk < ActiveRecord::Base
 
   before_save :set_criticality_rationale
 
-  # attr_accessible :title, :description, :probability, :impact, :risk_status_id
-
   safe_attributes 'title', 'description', 'probability', 'impact', 'risk_status_id'
 
 private
@@ -28,10 +24,12 @@ private
     self.criticality = self.probability * self.impact
     self.rationale =
       case self.criticality
-      when 1..4 then RATIONALES.first
-      when 5..8 then RATIONALES.second
-      else RATIONALES.third
+      when 1..4
+        'Monitor'
+      when 5..9
+        'Plan Mitigation'
+      when 10..16
+        'Mitigate'
       end
   end
-
 end
