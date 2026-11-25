@@ -4,7 +4,7 @@
   <p><strong><%= l(:label_selected) rescue 'Selected risks' %>:</strong></p>
   <ul>
     <% @risks.each do |risk| %>
-      <li><%= link_to "##{risk.id} #{risk.title}", project_risk_path(risk.project, risk) %></li>
+      <li><%= link_to "##{risk.id} #{risk.title}", risk_path(risk) %></li>
     <% end %>
   </ul>
 </div>

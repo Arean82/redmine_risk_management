@@ -1,7 +1,7 @@
 <div class="contextual">
-  <%= link_to 'PDF', project_risk_path(@risk.project, @risk, format: 'pdf'), class: 'icon icon-pdf' %>
-  <%= link_to l(:button_edit), edit_project_risk_path(@risk.project, @risk), class: 'icon icon-edit' if User.current.allowed_to?(:edit_risks, @risk.project) %>
-  <%= link_to l(:button_delete), project_risk_path(@risk.project, @risk), method: :delete, data: { confirm: l(:text_are_you_sure) }, class: 'icon icon-del' if User.current.allowed_to?(:delete_risks, @risk.project) %>
+  <%= link_to 'PDF', risk_path(@risk, format: 'pdf'), class: 'icon icon-pdf' %>
+  <%= link_to l(:button_edit), edit_risk_path(@risk), class: 'icon icon-edit' if User.current.allowed_to?(:edit_risks, @risk.project) %>
+  <%= link_to l(:button_delete), risk_path(@risk), method: :delete, data: { confirm: l(:text_are_you_sure) }, class: 'icon icon-del' if User.current.allowed_to?(:delete_risks, @risk.project) %>
 </div>
 
 <h2><%= l(:label_risk) %> #<%= @risk.id %></h2>

@@ -20,7 +20,8 @@ class RisksController < ApplicationController
       @risk_count = @query.risk_count
       @risk_pages = Paginator.new @risk_count, @limit, params['page']
       @offset ||= @risk_pages.offset
-      @risks = @query.risks(order: sort_clause, offset: @offset, limit: @limit)
+      sort_order = @query.sort_criteria.try(:to_sql)
+      @risks = @query.risks(order: sort_order, offset: @offset, limit: @limit)
 
       respond_to do |format|
         format.html
@@ -42,7 +43,6 @@ class RisksController < ApplicationController
     @journals = @risk.journals.includes(:user, :details).reorder("#{Journal.table_name}.id ASC").to_a
     @journals.each_with_index { |j, i| j.indice = i + 1 }
     @journals.reject!(&:private_notes?) unless User.current.allowed_to?(:view_private_notes, @risk.project)
-    Journal.preload_journals_details_reflected_objects(@journals)
     @journals.reverse! if User.current.wants_comments_in_reverse_order?
 
     respond_to do |format|
