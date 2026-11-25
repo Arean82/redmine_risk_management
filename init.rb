@@ -27,6 +27,7 @@ Redmine::Plugin.register :redmine_risk_management do
 end
 
 require_relative 'lib/redmine_risk_management/hooks/views_issues_hook'
+require_relative 'lib/redmine_risk_management/hooks/views_projects_hook'
 
 Rails.configuration.to_prepare do
   Issue.include(RedmineRiskManagement::Patches::IssuePatch) unless Issue.included_modules.include?(RedmineRiskManagement::Patches::IssuePatch)
