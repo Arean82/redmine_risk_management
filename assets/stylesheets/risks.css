@@ -81,3 +81,20 @@ table.risk_statuses .color {
   float: left;
   font: 10px Verdana, sans-serif;
 }
+
+/* Fix table first column sort arrow overlap and background glitch */
+table.list th a.sort.icon {
+  background-image: none !important;
+}
+
+table.list th.id {
+  min-width: 48px;
+}
+
+table.list th a.sort {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline-end: 0;
+  white-space: nowrap;
+}

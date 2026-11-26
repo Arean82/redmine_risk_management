@@ -24,6 +24,7 @@ class Risk < ApplicationRecord
                 url: proc { |o| { controller: 'risks', action: 'show', id: o.id } },
                 description: :description,
                 datetime: :created_at,
+                author: :user,
                 type: 'risk'
 
   acts_as_activity_provider type: 'risks',
