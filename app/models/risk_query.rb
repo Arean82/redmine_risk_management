@@ -114,7 +114,7 @@ class RiskQuery < Query
   end
 
   def base_scope
-    Risk.joins(:risk_status)
+    Risk.joins(:project, :risk_status)
         .left_outer_joins(:category, :assigned_to, :user)
         .where(statement)
   end

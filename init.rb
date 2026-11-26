@@ -25,7 +25,11 @@ Redmine::Plugin.register :redmine_risk_management do
   activity_provider :risks, class_name: ['Risk'], default: true
 
   menu :project_menu, :risks, { controller: :risks, action: :index },
-       caption: :label_risk_plural, before: :settings, param: :project_id
+       caption: :label_risk_plural,
+       html: { class: 'icon' },
+       icon: 'shield-check',
+       before: :settings,
+       param: :project_id
 
   menu :top_menu, :risks, { controller: :risks, action: :index, project_id: nil },
        caption: :label_risk_plural, if: proc { User.current.logged? }
