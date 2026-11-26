@@ -23,6 +23,7 @@ class Risk < ApplicationRecord
   acts_as_event title: proc { |o| "#{I18n.t(:label_risk)} ##{o.id}: #{o.title}" },
                 url: proc { |o| { controller: 'risks', action: 'show', id: o.id } },
                 description: :description,
+                datetime: :created_at,
                 type: 'risk'
 
   acts_as_activity_provider type: 'risks',
