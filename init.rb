@@ -26,8 +26,6 @@ Redmine::Plugin.register :redmine_risk_management do
 
   menu :project_menu, :risks, { controller: :risks, action: :index },
        caption: :label_risk_plural,
-       html: { class: 'icon' },
-       icon: 'shield-check',
        before: :settings,
        param: :project_id
 
