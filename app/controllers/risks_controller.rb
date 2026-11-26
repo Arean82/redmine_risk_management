@@ -11,6 +11,8 @@ class RisksController < ApplicationController
   before_action :authorize, except: [:index, :bulk_edit, :bulk_update, :bulk_destroy, :preview]
   before_action :authorize_global, only: [:bulk_edit, :bulk_update, :bulk_destroy]
 
+  accept_api_auth :index, :show, :create, :update, :destroy
+
   def index
     use_session = !request.format.csv?
     retrieve_query(RiskQuery, use_session)
@@ -67,11 +69,17 @@ class RisksController < ApplicationController
 
     if @risk.save
       flash[:notice] = l(:notice_successful_create)
-      redirect_to project_risks_path(@project)
+      respond_to do |format|
+        format.html { redirect_to project_risks_path(@project) }
+        format.api  { render action: 'show', status: :created, location: project_risk_url(@project, @risk) }
+      end
     else
       @risk_statuses = RiskStatus.ordered
       @categories = @project.risk_categories.ordered
-      render action: 'new'
+      respond_to do |format|
+        format.html { render action: 'new' }
+        format.api  { render_validation_errors(@risk) }
+      end
     end
   end
 
@@ -86,11 +94,17 @@ class RisksController < ApplicationController
 
     if @risk.save
       flash[:notice] = l(:notice_successful_update)
-      redirect_to project_risk_path(@risk.project, @risk)
+      respond_to do |format|
+        format.html { redirect_to project_risk_path(@risk.project, @risk) }
+        format.api  { render_api_ok }
+      end
     else
       @risk_statuses = RiskStatus.ordered
       @categories = @risk.project.risk_categories.ordered
-      render action: 'edit'
+      respond_to do |format|
+        format.html { render action: 'edit' }
+        format.api  { render_validation_errors(@risk) }
+      end
     end
   end
 
@@ -101,7 +115,10 @@ class RisksController < ApplicationController
     else
       flash[:error] = l(:notice_unsuccessful_delete)
     end
-    redirect_to project_risks_path(project)
+    respond_to do |format|
+      format.html { redirect_to project_risks_path(project) }
+      format.api  { render_api_ok }
+    end
   end
 
   def bulk_edit

@@ -65,4 +65,55 @@ class RisksControllerTest < ActionController::TestCase
       assert_redirected_to project_risks_path(@project)
     end
   end
+
+  test 'should get index as json' do
+    get :index, params: { project_id: @project, format: 'json' }
+    assert_response :success
+    assert_equal 'application/json', response.media_type
+    json = JSON.parse(response.body)
+    assert json.key?('risks')
+    assert json.key?('total_count')
+  end
+
+  test 'should get show as json' do
+    get :show, params: { id: @risk.id, format: 'json' }
+    assert_response :success
+    assert_equal 'application/json', response.media_type
+    json = JSON.parse(response.body)
+    assert json.key?('risk')
+    assert_equal @risk.id, json['risk']['id']
+    assert_equal @risk.title, json['risk']['title']
+  end
+
+  test 'should post create as json' do
+    assert_difference 'Risk.count' do
+      post :create, params: {
+        project_id: @project,
+        risk: { title: 'API Risk', description: 'API description', probability: 2, impact: 3 },
+        format: 'json'
+      }
+    end
+    assert_response :created
+    assert_equal 'application/json', response.media_type
+    json = JSON.parse(response.body)
+    assert json.key?('risk')
+    assert_equal 'API Risk', json['risk']['title']
+  end
+
+  test 'should put update as json' do
+    put :update, params: {
+      id: @risk.id,
+      risk: { title: 'API Risk Updated' },
+      format: 'json'
+    }
+    assert_response :no_content
+    assert_equal 'API Risk Updated', @risk.reload.title
+  end
+
+  test 'should delete destroy as json' do
+    assert_difference 'Risk.count', -1 do
+      delete :destroy, params: { id: @risk.id, format: 'json' }
+    end
+    assert_response :no_content
+  end
 end

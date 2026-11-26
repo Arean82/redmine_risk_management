@@ -1,0 +1,52 @@
+api.risk do
+  api.id @risk.id
+  api.project(:id => @risk.project_id, :name => @risk.project.name) unless @risk.project.nil?
+  api.status(:id => @risk.risk_status_id, :name => @risk.risk_status.name, :status_type => @risk.risk_status.status_type) unless @risk.risk_status.nil?
+  api.category(:id => @risk.category_id, :name => @risk.category.name) unless @risk.category.nil?
+  api.author(:id => @risk.user_id, :name => @risk.user.name) unless @risk.user.nil?
+  api.assigned_to(:id => @risk.assigned_to_id, :name => @risk.assigned_to.name) unless @risk.assigned_to.nil?
+
+  api.title @risk.title
+  api.description @risk.description
+  api.probability @risk.probability
+  api.impact @risk.impact
+  api.criticality @risk.criticality
+  api.rationale @risk.rationale
+  api.strategy @risk.strategy
+  api.treatments @risk.treatments
+  api.lessons @risk.lessons
+  api.due_date @risk.due_date
+  api.estimated_cost @risk.estimated_cost
+  api.emv @risk.emv
+  api.velocity_trend @risk.velocity_trend
+  api.previous_criticality @risk.previous_criticality
+
+  api.array :issues do
+    @risk.issues.each do |issue|
+      api.issue do
+        api.id issue.id
+        api.subject issue.subject
+        api.status(:id => issue.status_id, :name => issue.status.name) unless issue.status.nil?
+      end
+    end
+  end
+
+  api.array :journals do
+    @journals.each do |journal|
+      api.journal :id => journal.id do
+        api.user(:id => journal.user_id, :name => journal.user.name) unless journal.user.nil?
+        api.notes journal.notes
+        api.created_on journal.created_on
+        api.array :details do
+          journal.details.each do |detail|
+            api.detail :property => detail.property, :name => detail.prop_key, :old_value => detail.old_value, :value => detail.value
+          end
+        end
+      end
+    end
+  end if @journals.present?
+
+  api.closed_on @risk.closed_on
+  api.created_at @risk.created_at
+  api.updated_at @risk.updated_at
+end

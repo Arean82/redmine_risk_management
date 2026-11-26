@@ -85,6 +85,15 @@ Fully modernized for **Redmine 6.x and 7.0+**, **Rails 7/8**, **Ruby 4.0**, and 
 - Target mitigation deadlines with date picker (`due_date`).
 - Many-to-many issue binding (`risk_issues`) with real-time schedule delay badges (`🔴 Overdue`, `🟢 On Track`).
 
+### 6. REST API Endpoints (.json / .xml)
+- Full REST API integration authenticated via Redmine API key (`X-Redmine-API-Key` or `key` parameter) or HTTP Basic Auth (`accept_api_auth`).
+- **Endpoints:**
+  - `GET /projects/:project_id/risks.json` / `GET /global_risks.json` - List risks with pagination metadata and EMV calculations.
+  - `GET /risks/:id.json` - Get detailed risk attributes, linked issues, and journal change history.
+  - `POST /projects/:project_id/risks.json` - Create a new risk via JSON/XML payload.
+  - `PUT /risks/:id.json` - Update risk properties and append journal notes.
+  - `DELETE /risks/:id.json` - Remove a risk.
+
 ---
 
 ## 📊 Criticality Matrix & Scoring

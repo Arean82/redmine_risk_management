@@ -1,0 +1,31 @@
+api.array :risks, api_meta(:total_count => @risk_count, :offset => @offset, :limit => @limit) do
+  @risks.each do |risk|
+    api.risk do
+      api.id risk.id
+      api.project(:id => risk.project_id, :name => risk.project.name) unless risk.project.nil?
+      api.status(:id => risk.risk_status_id, :name => risk.risk_status.name, :status_type => risk.risk_status.status_type) unless risk.risk_status.nil?
+      api.category(:id => risk.category_id, :name => risk.category.name) unless risk.category.nil?
+      api.author(:id => risk.user_id, :name => risk.user.name) unless risk.user.nil?
+      api.assigned_to(:id => risk.assigned_to_id, :name => risk.assigned_to.name) unless risk.assigned_to.nil?
+
+      api.title risk.title
+      api.description risk.description
+      api.probability risk.probability
+      api.impact risk.impact
+      api.criticality risk.criticality
+      api.rationale risk.rationale
+      api.strategy risk.strategy
+      api.treatments risk.treatments
+      api.lessons risk.lessons
+      api.due_date risk.due_date
+      api.estimated_cost risk.estimated_cost
+      api.emv risk.emv
+      api.velocity_trend risk.velocity_trend
+      api.previous_criticality risk.previous_criticality
+
+      api.closed_on risk.closed_on
+      api.created_at risk.created_at
+      api.updated_at risk.updated_at
+    end
+  end
+end
